@@ -1,0 +1,43 @@
+<html>
+<head>
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <link rel="apple-touch-startup-image" href="images/favicon.png" />
+	<link rel="apple-touch-icon" href="images/favicon.png" />
+	<link rel="apple-touch-icon" sizes="72x72" href="images/favicon.png" />
+	<link rel="apple-touch-icon" sizes="114x114" href="images/favicon.png" />
+	<link rel="icon" href="/favicon.ico">
+	
+	<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+	<link rel="stylesheet" href="css/commuter.css" />
+		
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+	<script type="text/javascript" src="http://www.datejs.com/build/date.js"></script>
+	<script type="text/javascript" src="js/jquery.cookie.js"></script>
+	
+	<script type="text/javascript" src="js/commuter.js"></script>
+	<script type="text/javascript" src="js/sunriseset.js"></script>
+	<script type="text/javascript" src="js/options.js"></script>
+</head>
+<body>
+<div data-role="page">
+	<div data-role="header" data-position="fixed" data-theme="b">
+		<h1 role="heading">Commuter Weather</h1>
+		<a href="options.html" data-icon="gear" class="ui-btn-right" data-iconpos="notext" data-ajax="false">Options</a>
+	</div>
+	<div data-role="content">
+        <div id="forecast">
+        </div>
+	</div>
+	<div data-role="footer" data-theme="b" data-position="fixed" >
+		<h6>Data from <a href="http://www.weather.gov/">National Weather Service</a></h6>
+	</div>
+</div>
+<div id="error" data-role="popup">
+  <p>There was an error loading the data</p>
+  <p><a href="#" onclick="location.reload(true)">Refresh</a></p>
+</div>
+</body>
+</html>

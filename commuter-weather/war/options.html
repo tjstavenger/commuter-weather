@@ -1,0 +1,78 @@
+<html>
+<head>
+<link rel="shortcut icon" href="/favicon.ico">
+<link rel=”apple-touch-icon” href=”/favicon.png”/>
+<link rel=”apple-touch-icon-precomposed” href=”/favicon.png”/>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<link rel="stylesheet" href="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+<script type="text/javascript" src="http://code.jquery.com/mobile/1.3.2/jquery.mobile-1.3.2.min.js"></script>
+<script type="text/javascript" src="http://www.datejs.com/build/date.js"></script>
+<script type="text/javascript" src="js/jquery.cookie.js"></script>
+
+<script type="text/javascript" src="js/options.js"></script>
+
+<link rel="stylesheet" href="css/commuter.css" />
+<link rel="stylesheet" href="css/options.css" />
+</head>
+<body>
+<div data-role="page">
+	<div data-role="header" data-position="fixed" data-theme="b">
+		<a href="index.html" data-ajax="false" data-icon="back">Back</a>
+		<h1 role="heading">Options</h1>
+		<a href="index.html" data-ajax="false" data-icon="check" onclick="saveOptions()">Save</a>
+	</div>
+	<div data-role="content">
+		<div data-role="fieldcontain">
+    		<label for="locationZip">Location (ZIP)</label>
+    		<input type="number" id="locationZip" value="99352" />
+		</div>
+		<div data-role="fieldcontain">
+    		<label for="minTemp">Min Temperature (&deg;F)</label>
+    		<input type="number" id="minTemp" value="40" />
+		</div>
+		<div data-role="fieldcontain">
+    		<label for="maxTemp">Max Temperature (&deg;F)</label>
+    		<input type="number" id="maxTemp" value="100" />
+		</div>
+		<div data-role="fieldcontain">
+    		<label for="maxPop">Max Precipitation (%)</label>
+    		<input type="number" id="maxPop" value="30" />
+		</div>
+		<div data-role="fieldcontain">
+    		<label for="maxWind">Max Wind Speed (mph)</label>
+    		<input type="number" id="maxWind" value="15" />
+		</div>
+		<div data-role="fieldcontain">
+    		<label for="maxGust">Max Gust Speed (mph)</label>
+    		<input type="number" id="maxGust" value="15" />
+		</div>
+		<div data-role="fieldcontain">
+    		<label for="beforeSunrise">Time Before Sunrise (min)</label>
+    		<input type="number" id="beforeSunrise" value="75" />
+		</div>
+		<div data-role="fieldcontain">
+    		<label for="afterSunset">Time After Sunset (min)</label>
+    		<input type="number" id="afterSunset" value="75" />
+		</div>
+		<div data-role="fieldcontain" data-theme="b">
+			<label for="morningStart">Morning Commute Start</label>
+			<input type="time" id="morningStart" value="06:00" />
+		</div>
+		<div data-role="fieldcontain" data-theme="b">
+			<label for="morningEnd">Morning Commute End</label>
+			<input type="time" id="morningEnd" value="07:00" />
+		</div>
+		<div data-role="fieldcontain" data-theme="b">
+			<label for="afternoonStart">Afternoon Commute Start</label>
+			<input type="time" id="afternoonStart" value="16:00" />
+		</div>
+		<div data-role="fieldcontain" data-theme="b">
+			<label for="afternoonEnd">Afternoon Commute End</label>
+			<input type="time" id="afternoonEnd" value="17:00" />
+		</div>
+	</div>
+</div>
+</body>
+</html>

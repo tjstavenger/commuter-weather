@@ -1,0 +1,74 @@
+.ui-header .ui-title {
+	margin: .6em auto .8em;
+}
+
+.ui-footer .ui-title {
+	margin: 3px;
+	font-size: 8pt;
+}
+.ui-collapsible-heading .ui-btn-icon-right .ui-btn-inner {
+	padding-right: 30px;
+}
+.ui-content {
+	padding-top: 0px;
+	padding-bottom: 0px;
+}
+.commute-image {
+	width: 45px;
+	height: 45px;
+}
+img.commute-caution {
+	border: 5px solid yellow !important;
+	border-radius: .6em;
+}
+div.commute-caution:before {
+	content: 'Caution';
+}
+img.commute-drive {
+	border: 5px solid red !important;
+	border-radius: .6em;
+}
+div.commute-drive:before {
+	content: 'Drive';
+}
+div.commute-caution, div.commute-drive, div.commute-ride {
+	text-align: center;
+	font-style: italic;
+	font-size: 8pt;
+}
+img.commute-ride {
+	border: 5px solid green !important;
+	border-radius: .6em;
+}
+div.commute-ride:before {
+	content: 'Ride';
+}
+#error {
+	text-align: center;
+}
+.period-text {
+	font-size: 14px;
+}
+.period-table td, .hourly-table td {
+	padding: 0px 5px 0px 0px;
+	font-size: 14px;
+}
+.weather-table td {
+	padding: 0px 5px 0px 0px;
+	font-size: 14px;
+}
+.hourly {
+	border-top: 1px solid lightgray;
+	padding: 5px;
+}
+.hourly-title {
+	font-weight: bold;
+}
+.period-text {
+	margin-bottom: 10px;
+}
+.weather-icon {
+	width: 12px;
+	height: 12px;
+	padding-right: 5px;
+}
