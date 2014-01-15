@@ -144,8 +144,8 @@ function parseCurrent(response, sun) {
 	period.windChill = response.currentobservation.WindChill == null || response.currentobservation.WindChill == 'null' || response.currentobservation.WindChill > period.temperature ? period.temperature : response.currentobservation.WindChill;
 	period.text = null;
 	period.windDirection = toCardinal(response.currentobservation.Windd);
-	period.windSpeed = response.currentobservation.Winds == 'NA' ? 0 : response.currentobservation.Winds;
-	period.gustSpeed = response.currentobservation.Gust == 'NA' ? 0 : response.currentobservation.Gust;
+	period.windSpeed = response.currentobservation.Winds == 'NA' ? 0 : Number(response.currentobservation.Winds);
+	period.gustSpeed = response.currentobservation.Gust == 'NA' ? 0 : Number(response.currentobservation.Gust);
 	period.hourly = null; // no hourly for current conditions
 	
 	calculateApparentTemperature(period);
@@ -172,7 +172,7 @@ function parsePeriod(index, daily, hourly, sun) {
 	period.sunset = sun.sunset;
 	period.weather = daily.data.weather[index];
 	period.weatherImage = daily.data.iconLink[index];
-	period.pop = (daily.data.pop[index] == null || daily.data.pop[index] == 'null' ? 0 : daily.data.pop[index]);
+	period.pop = (daily.data.pop[index] == null || daily.data.pop[index] == 'null' ? 0 : Number(daily.data.pop[index]));
 	period.temperatureLabel = daily.time.tempLabel[index];
 	period.temperature = daily.data.temperature[index];
 	period.windChill = null;
@@ -208,8 +208,8 @@ function parsePeriod(index, daily, hourly, sun) {
 			hour.pop = hourlyData.pop[i];
 			hour.cloudAmount = hourlyData.cloudAmount[i];
 			hour.windDirection = hourlyData.windDirectionCardinal[i];
-			hour.windSpeed = hourlyData.windSpeed[i] == null || hourlyData.windSpeed[i] == 'null' ? 0 : hourlyData.windSpeed[i];
-			hour.gustSpeed = hourlyData.windGust[i] == null || hourlyData.windGust[i] == 'null' ? 0 : hourlyData.windGust[i];
+			hour.windSpeed = hourlyData.windSpeed[i] == null || hourlyData.windSpeed[i] == 'null' ? 0 : Number(hourlyData.windSpeed[i]);
+			hour.gustSpeed = hourlyData.windGust[i] == null || hourlyData.windGust[i] == 'null' ? 0 : Number(hourlyData.windGust[i]);
 			
 			calculateApparentTemperature(hour);
 			
