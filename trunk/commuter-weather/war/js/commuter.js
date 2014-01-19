@@ -46,7 +46,7 @@ $(document).ready(function() {
  * @param hourly NWS response data for hourly forecast
  */
 function successYql( daily, hourly ) {
-	if (daily[0].query.results.json && hourly[0].query.results.json) { // yql timeouts return "success" for some reason...
+	if (daily[0].query.results && hourly[0].query.results) { // yql timeouts return "success" for some reason...
 		success([daily[0].query.results.json], [hourly[0].query.results.json]);
 	}
 	else {
