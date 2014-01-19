@@ -46,7 +46,12 @@ $(document).ready(function() {
  * @param hourly NWS response data for hourly forecast
  */
 function successYql( daily, hourly ) {
-	success([daily[0].query.results.json], [hourly[0].query.results.json]);
+	if (daily[0].query.results.json && hourly[0].query.results.json) { // yql timeouts return "success" for some reason...
+		success([daily[0].query.results.json], [hourly[0].query.results.json]);
+	}
+	else {
+		failure(daily, hourly);
+	}
 }
 
 /**
