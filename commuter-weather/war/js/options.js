@@ -34,7 +34,7 @@ function loadOptions() {
 		options.locationZip = 99352;
 		options.locationLat = 46.3;
 		options.locationLon = -119.31;
-		options.minTemp = 40;
+		options.minTemp = 32;
 		options.maxTemp = 100;
 		options.maxPop = 30;
 		options.maxWind = 15;
