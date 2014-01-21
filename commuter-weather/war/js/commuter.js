@@ -134,7 +134,7 @@ function failure( daily, hourly ) {
 function parseCurrent(response, sun) {
 	var period = new Object();
 	period.current = true;
-	period.time = new Date(response.creationDate);
+	period.time = Date.parse(response.creationDateLocal);
 	period.name = response.location.areaDescription;
 	period.night = true;
 	period.sunrise = sun.sunrise;
@@ -439,6 +439,11 @@ function loadPeriods(periods) {
 	
 	for (var i = 0; i < periods.length; i++) {
 		var period = periods[i];
+		
+		if (period.current) {
+			$('#updated').text(period.time.toString('MM/dd/yy h:mm tt'));
+		}
+		
 		panel += '<div data-role="collapsible" data-inset="false" data-collapsed="true" data-content-theme="d" data-iconpos="right" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">' +
 						'<h3>' + 
 							'<div class="period-title">' + period.name + '</div>'+ 
