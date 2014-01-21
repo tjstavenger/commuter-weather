@@ -151,6 +151,7 @@ function parseCurrent(response, sun) {
 	period.windDirection = toCardinal(response.currentobservation.Windd);
 	period.windSpeed = response.currentobservation.Winds == 'NA' ? 0 : Number(response.currentobservation.Winds);
 	period.gustSpeed = response.currentobservation.Gust == 'NA' ? 0 : Number(response.currentobservation.Gust);
+	period.visibility = Number(response.currentobservation.Visibility);
 	period.hourly = null; // no hourly for current conditions
 	
 	calculateApparentTemperature(period);
@@ -184,6 +185,7 @@ function parsePeriod(index, daily, hourly, sun) {
 	period.relativeHumidity = null;
 	period.dewPoint = null;
 	period.text = daily.data.text[index];
+	period.visibility = null;
 	
 	period.hourly = new Array();
 	var hourlyData = hourly[period.name.replace(/ /g, '').replace(/\'/g, '_')]; // hourly 'period' matches daily after removing spaces and single quotes
@@ -215,6 +217,7 @@ function parsePeriod(index, daily, hourly, sun) {
 			hour.windDirection = hourlyData.windDirectionCardinal[i];
 			hour.windSpeed = hourlyData.windSpeed[i] == null || hourlyData.windSpeed[i] == 'null' ? 0 : Number(hourlyData.windSpeed[i]);
 			hour.gustSpeed = hourlyData.windGust[i] == null || hourlyData.windGust[i] == 'null' ? 0 : Number(hourlyData.windGust[i]);
+			hour.visibility = null;
 			
 			calculateApparentTemperature(hour);
 			
@@ -462,7 +465,7 @@ function loadPeriods(periods) {
 												'<td><img src="images/gust.svg" class="weather-icon" />'+ period.gustSpeed + 'mph</td>' +
 											'</tr>' +
 										'</table>' +
-										(period.current ? '' : '<img src="images/sun.svg" class="weather-icon" />' + (period.night ? period.sunset.toString('h:mm tt') : period.sunrise.toString('h:mm tt'))) +
+										(period.current ? '<img src="images/visibility.svg" class="weather-icon" />' + period.visibility + ' miles' : '<img src="images/sun.svg" class="weather-icon" />' + (period.night ? period.sunset.toString('h:mm tt') : period.sunrise.toString('h:mm tt'))) +
 									'</td>' +
 								'</tr>' +
 							'</table>' +
