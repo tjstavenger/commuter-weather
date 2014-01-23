@@ -134,7 +134,7 @@ function failure( daily, hourly ) {
 function parseCurrent(response, sun) {
 	var period = new Object();
 	period.current = true;
-	period.time = Date.parse(response.creationDateLocal);
+	period.time = Date.parse(response.currentobservation.Date);
 	period.name = response.location.areaDescription;
 	period.night = true;
 	period.sunrise = sun.sunrise;
