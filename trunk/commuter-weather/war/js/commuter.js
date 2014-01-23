@@ -29,9 +29,11 @@ $(document).ready(function() {
 //			$.getJSON('hourly?lat=' + options.locationLat + '&lon=' + options.locationLon)
 //		  ).then( success, failure );
 	
-	// YQL proxy
-	$.when( $.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()) + '"&format=json'),
-			$.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()) + '"&format=json')
+	// YQL proxy - jsonCompat=new prevents YQL from formatting JSON (lossy, removes single sized arrays and turns numbers to strings)
+	// See http://developer.yahoo.com/yql/guide/yql_url.html
+	// See http://developer.yahoo.com/yql/guide/json_to_json.html
+	$.when( $.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()) + '"&format=json&jsonCompat=new'),
+			$.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()) + '"&format=json&jsonCompat=new')
 		  ).then( successYql, failure );
 	
 	$.mobile.loading('show');
