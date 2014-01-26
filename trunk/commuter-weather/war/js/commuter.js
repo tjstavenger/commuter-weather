@@ -156,6 +156,19 @@ function parseCurrent(response, sun) {
 	period.visibility = Number(response.currentobservation.Visibility);
 	period.hourly = null; // no hourly for current conditions
 	
+	if ( response.data.hazard && response.data.hazard.length > 0 ) {
+		period.hazards = new Array();
+		
+		for (var i = 0; i < response.data.hazard.length; i++) {
+			period.hazards[i] = new Object();
+			period.hazards[i].text = response.data.hazard[i];
+			period.hazards[i].url = response.data.hazardUrl[i];
+		}
+	} else {
+		period.hazards = null;
+	}
+	
+	
 	calculateApparentTemperature(period);
 	
 	return period;
@@ -445,33 +458,56 @@ function loadPeriods(periods) {
 	for (var i = 0; i < periods.length; i++) {
 		var period = periods[i];
 		
+		panel += '<div data-role="collapsible" data-inset="false" data-collapsed="true" data-content-theme="d" data-iconpos="right" ';
+		
 		if (period.current) {
 			$('#updated').text(period.time.toString('MM/dd/yy h:mm tt'));
+		
+			if (period.hazards && period.hazards.length > 0) {
+				panel += 'data-theme="e" data-collapsed-icon="alert" data-expanded-icon="alert">';	
+			} else {
+				panel += 'data-collapsed-icon="" data-expanded-icon="">';
+			}
+		} else {
+			panel += 'data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">';
 		}
 		
-		panel += '<div data-role="collapsible" data-inset="false" data-collapsed="true" data-content-theme="d" data-iconpos="right" data-collapsed-icon="arrow-r" data-expanded-icon="arrow-d">' +
-						'<h3>' + 
-							'<div class="period-title">' + period.name + '</div>'+ 
-							'<table class="period-table">' + 
-								'<tr>' +
-									'<td><img src="' + period.weatherImage + '" class="commute-image ' + period.commuteClass + '"/><div class="' + period.commuteClass + '"></div></td>' +
-									'<td>' +
-										period.weather +
-										'<table class="weather-table">' +
-											'<tr>' +
-												'<td><img src="images/temp.svg" class="weather-icon" />' + (period.temperatureLabel ? period.temperatureLabel + ' ' : '') + period.temperature + '&deg;</td>' + 
-												'<td>' + (period.current ? '<img src="images/windChill.svg" class="weather-icon" />' + period.apparentTemperature + '&deg;' : '<img src="images/precip.svg" class="weather-icon" />' + period.pop + '%') + '</td>' + 
-											'</tr>' +
-											'<tr>' +
-												'<td><img src="images/wind.svg" class="weather-icon" />' + period.windDirection + ' ' + period.windSpeed + 'mph</td>' +
-												'<td><img src="images/gust.svg" class="weather-icon" />'+ period.gustSpeed + 'mph</td>' +
-											'</tr>' +
-										'</table>' +
-										(period.current ? '<img src="images/visibility.svg" class="weather-icon" />' + period.visibility + ' miles' : '<img src="images/sun.svg" class="weather-icon" />' + (period.night ? period.sunset.toString('h:mm tt') : period.sunrise.toString('h:mm tt'))) +
-									'</td>' +
-								'</tr>' +
-							'</table>' +
-						'</h3>';
+		panel += '<h3>' + 
+					'<div class="period-title">' + period.name + '</div>'+ 
+					'<table class="period-table">' + 
+						'<tr>' +
+							'<td><img src="' + period.weatherImage + '" class="commute-image ' + period.commuteClass + '"/><div class="' + period.commuteClass + '"></div></td>' +
+							'<td>' +
+								period.weather +
+								'<table class="weather-table">' +
+									'<tr>' +
+										'<td><img src="images/temp.svg" class="weather-icon" />' + (period.temperatureLabel ? period.temperatureLabel + ' ' : '') + period.temperature + '&deg;</td>' + 
+										'<td>' + (period.current ? '<img src="images/windChill.svg" class="weather-icon" />' + period.apparentTemperature + '&deg;' : '<img src="images/precip.svg" class="weather-icon" />' + period.pop + '%') + '</td>' + 
+									'</tr>' +
+									'<tr>' +
+										'<td><img src="images/wind.svg" class="weather-icon" />' + period.windDirection + ' ' + period.windSpeed + 'mph</td>' +
+										'<td><img src="images/gust.svg" class="weather-icon" />'+ period.gustSpeed + 'mph</td>' +
+									'</tr>' +
+								'</table>' +
+								(period.current ? '<img src="images/visibility.svg" class="weather-icon" />' + period.visibility + ' miles' : '<img src="images/sun.svg" class="weather-icon" />' + (period.night ? period.sunset.toString('h:mm tt') : period.sunrise.toString('h:mm tt'))) +
+							'</td>' +
+						'</tr>' +
+					'</table>' +
+				'</h3>';
+		
+		if ( period.current ) {
+			if ( period.hazards ) {
+				panel += '<div>Current weather advisories:<ul>';
+				
+				for (var j = 0; j < period.hazards.length; j++) {
+					panel += '<li><a href="' + period.hazards[j].url + '" target="_blank">' + period.hazards[j].text + '</a></li>';
+				}
+				
+				panel += '</ul></div>';
+			} else {
+				panel += '<div>No current weather advisories.</div>';
+			}
+		}
 		
 		if ( (period.text && period.text.length > 0) || (period.hourly && period.hourly.length > 0) ) {
 			panel += '<div>';
@@ -523,7 +559,6 @@ function loadPeriods(periods) {
 	
 	$('#forecast').append(panel);
 	$('div[data-role=collapsible]').collapsible();
-	$('.ui-collapsible-heading:first').unbind('click');
 }
 
 /**
