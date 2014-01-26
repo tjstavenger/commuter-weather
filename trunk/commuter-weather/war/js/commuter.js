@@ -496,7 +496,7 @@ function loadPeriods(periods) {
 				'</h3>';
 		
 		if ( period.current ) {
-			if ( period.hazards ) {
+			if ( period.hazards && period.hazards.length > 0 ) {
 				panel += '<div>Current weather advisories:<ul>';
 				
 				for (var j = 0; j < period.hazards.length; j++) {
