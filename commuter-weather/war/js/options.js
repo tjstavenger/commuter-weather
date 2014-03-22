@@ -2,6 +2,9 @@ $.cookie.json = true; 			// use JSON.stringify and JSON.parse to save objects
 $.cookie.defaults.path = '/'; 	// all cookies available to full site
 $.cookie.defaults.expires = 7; 	// cookies basically don't expire
 
+var NWS = 'nws';
+var FORECAST_IO = "forecast.io";
+
 /**
  * Load current options from cookie
  */
@@ -31,6 +34,7 @@ function loadOptions() {
 	
 	if (options == null) {	
 		options = new Object();
+		options.dataSource = NWS;
 		
 		options.location = new Object();
 		options.location.zip = 99352;
