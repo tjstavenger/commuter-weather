@@ -1,5 +1,5 @@
-$.cookie.json = true; 				// use JSON.stringify and JSON.parse to save objects
-$.cookie.defaults.path = '/'; 		// all cookies available to full site
+$.cookie.json = true; 			// use JSON.stringify and JSON.parse to save objects
+$.cookie.defaults.path = '/'; 	// all cookies available to full site
 $.cookie.defaults.expires = 7; 	// cookies basically don't expire
 
 /**
@@ -7,18 +7,18 @@ $.cookie.defaults.expires = 7; 	// cookies basically don't expire
  */
 $(document).ready(function() {	
 	var options = loadOptions();
-	$('#locationZip').val(options.locationZip);
-	$('#minTemp').val(options.minTemp);
-	$('#maxTemp').val(options.maxTemp);
-	$('#maxPop').val(options.maxPop);
-	$('#maxWind').val(options.maxWind);
-	$('#maxGust').val(options.maxGust);
-	$('#morningStart').val(options.morningStart);
-	$('#morningEnd').val(options.morningEnd);
-	$('#afternoonStart').val(options.afternoonStart);
-	$('#afternoonEnd').val(options.afternoonEnd);
-	$('#beforeSunrise').val(options.beforeSunrise);
-	$('#afterSunset').val(options.afterSunset);
+	$('#locationZip').val(options.location.zip);
+	
+	loadCommute('morningCommute', options.morningCommute);
+	loadCommute('afternoonCommute', options.afternoonCommute);
+	
+	loadOption('minTemp', options.minTemp);
+	loadOption('maxTemp', options.maxTemp);
+	loadOption('maxPop', options.maxPop);
+	loadOption('maxWind', options.maxWind);
+	loadOption('maxGust', options.maxGust);
+	loadOption('beforeSunrise', options.beforeSunrise);
+	loadOption('afterSunset', options.afterSunset);
 });
 
 /**
@@ -31,23 +31,109 @@ function loadOptions() {
 	
 	if (options == null) {	
 		options = new Object();
-		options.locationZip = 99352;
-		options.locationLat = 46.3;
-		options.locationLon = -119.31;
-		options.minTemp = 32;
-		options.maxTemp = 100;
-		options.maxPop = 30;
-		options.maxWind = 15;
-		options.maxGust = 15;
-		options.morningStart = '06:00';
-		options.morningEnd = '07:00';
-		options.afternoonStart = '16:00';
-		options.afternoonEnd = '17:00';
-		options.beforeSunrise = 75;
-		options.afterSunset = 75;
+		
+		options.location = new Object();
+		options.location.zip = 99352;
+		options.location.lat = 46.3;
+		options.location.lon = -119.31;
+		
+		options.morningCommute = newCommute(true, '06:00', '07:00');
+		options.afternoonCommute = newCommute(true, '16:00', '17:00');
+		
+		options.minTemp = newOption(true, 27, 25);		
+		options.maxTemp = newOption(true, 95, 100);
+		options.maxPop = newOption(true, 20, 50);
+		options.maxWind = newOption(true, 20, 25);
+		options.maxGust = newOption(true, 20, 25);
+		options.beforeSunrise = newOption(true, 75, 90);
+		options.afterSunset = newOption(true, 75, 90);
 	}
 	
 	return options;
+}
+
+/**
+ * Create a new commute time object with the given enabled, start, and end values.
+ * 
+ * @param enabled boolean true/false if enabled or disabled
+ * @param start string 24 hour clock to start
+ * @param end string 24 hour clock to end
+ */
+function newCommute(enabled, start, end) {
+	var value = new Object();
+	value.enabled = enabled;
+	value.start = start;
+	value.end = end;
+	
+	return value;
+}
+
+/**
+ * Parse the values for the commute time with the given ID prefix.
+ * 
+ * @param id string ID prefix
+ */
+function parseCommute(id) {
+	var value = new Object();
+	value.enabled = $('#' + id + 'Enabled').val() == 'true';
+	value.start = $('#' + id + 'Start').val();
+	value.end = $('#' + id + 'End').val();
+
+	return value;
+}
+
+/**
+ * Load the input values for the commute time with the given ID prefix.
+ * 
+ * @param id string ID prefix
+ */
+function loadCommute(id, value) {
+	$('#' + id + 'Enabled').val(value.enabled.toString()).slider('refresh');
+	$('#' + id + 'Start').val(value.start);
+	$('#' + id + 'End').val(value.end);
+}
+
+/**
+ * Create a new options object with the given enabled, warn, and drive values.
+ * 
+ * @param enabled boolean true/false if enabled or disabled
+ * @param warn numeric value to warn at
+ * @param drive numeric value to drive at
+ */
+function newOption(enabled, warn, drive) {
+	var value = new Object();
+	value.enabled = enabled;
+	value.warn = warn;
+	value.drive = drive;
+	
+	return value;
+}
+
+/**
+ * Parse the values for the option with the given ID prefix.
+ * 
+ * @param id string ID prefix
+ * @param value object value with enabled, warn, and drive attriutes
+ */
+function parseOption(id) {
+	var value = new Object();
+	value.enabled = $('#' + id + 'Enabled').val() == 'true';
+	value.warn = parseFloat($('#' + id + 'Warn').val());
+	value.drive = parseFloat($('#' + id + 'Drive').val());
+
+	return value;
+}
+
+/**
+ * Load the input values for the option with the given ID prefix.
+ * 
+ * @param id string ID prefix
+ * @param value object value with enabled, warn, and drive attriutes
+ */
+function loadOption(id, value) {
+	$('#' + id + 'Enabled').val(value.enabled.toString()).slider('refresh');
+	$('#' + id + 'Warn').val(value.warn);
+	$('#' + id + 'Drive').val(value.drive);
 }
 
 /**
@@ -65,20 +151,22 @@ function saveOptions() {
 				var latLon = latLonList.split(' ')[0].split(',');
 				
 				var options = new Object();
-				options.locationZip = parseInt($('#locationZip').val());
-				options.locationLat = parseFloat(latLon[0]); 
-				options.locationLon = parseFloat(latLon[1]);
-				options.minTemp = parseFloat($('#minTemp').val());
-				options.maxTemp = parseFloat($('#maxTemp').val());
-				options.maxPop = parseFloat($('#maxPop').val());
-				options.maxWind = parseFloat($('#maxWind').val());
-				options.maxGust = parseFloat($('#maxGust').val());
-				options.beforeSunrise = parseFloat($('#beforeSunrise').val());
-				options.afterSunset = parseFloat($('#afterSunset').val());
-				options.morningStart = $('#morningStart').val();
-				options.morningEnd = $('#morningEnd').val();
-				options.afternoonStart = $('#afternoonStart').val();
-				options.afternoonEnd = $('#afternoonEnd').val();				
+				
+				options.location = new Object();
+				options.location.zip = parseInt($('#locationZip').val());
+				options.location.lat = parseFloat(latLon[0]); 
+				options.location.lon = parseFloat(latLon[1]);
+				
+				options.morningCommute = parseCommute('morningCommute');
+				options.afternoonCommute = parseCommute('afternoonCommute');
+				
+				options.minTemp = parseOption('minTemp');
+				options.maxTemp = parseOption('maxTemp');
+				options.maxPop = parseOption('maxPop');
+				options.maxWind = parseOption('maxWind');
+				options.maxGust = parseOption('maxGust');
+				options.beforeSunrise = parseOption('beforeSunrise');
+				options.afterSunset = parseOption('afterSunset');			
 				
 				$.cookie('options', options);
 			}

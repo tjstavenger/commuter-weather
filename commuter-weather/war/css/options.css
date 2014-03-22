@@ -1,0 +1,20 @@
+.centerAlign {
+	text-align: center;
+}
+
+.fieldTitle {
+	padding-top: 15px;
+}
+
+.header {
+	font-weight: bold;
+}
+
+.rightAlign {
+	text-align: right;
+}
+
+.separator {
+	border-top: 1px solid lightgray;
+	margin: 10px;
+}
