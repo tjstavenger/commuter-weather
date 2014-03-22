@@ -18,8 +18,10 @@
 	<script type="text/javascript" src="js/jquery.cookie.js"></script>
 	
 	<script type="text/javascript" src="js/commuter.js"></script>
-	<script type="text/javascript" src="js/sunriseset.js"></script>
 	<script type="text/javascript" src="js/options.js"></script>
+	<script type="text/javascript" src="js/nws.js"></script>
+	<script type="text/javascript" src="js/sunriseset.js"></script>
+	<script type="text/javascript" src="js/forecastio.js"></script>
 </head>
 <body>
 <div data-role="page">
@@ -32,7 +34,7 @@
         </div>
 	</div>
 	<div data-role="footer" data-theme="b" data-position="fixed" >
-		<h6>Updated <span id="updated"></span> by <a href="http://www.weather.gov/">National Weather Service</a></h6>
+		<h6>Updated <span id="updated"></span> by <span id="dataSource"></span></h6>
 	</div>
 </div>
 <div id="error" data-role="popup">
