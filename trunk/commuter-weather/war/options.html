@@ -25,6 +25,19 @@
 	</div>
 	<div data-role="content">
 		<div class="ui-grid-solo">
+			<div class="ui-block-a fieldTitle">Data Source</div>
+			<div class="ui-block-a">
+			<fieldset id="dataSourceGroup" data-role="controlgroup" data-mini="true">
+			    <input type="radio" name="dataSource" id="dataSource-nws" value="nws" checked="checked" />
+			    <label for="dataSource-nws">National Weather Service</label>
+			
+				<input type="radio" name="dataSource" id="dataSource-forecastio" value="forecastio"  />
+			    <label for="dataSource-forecastio">Forecast.io</label>
+			</fieldset>
+			</div>
+		</div>
+
+		<div class="ui-grid-solo">
 			<div class="ui-block-a fieldTitle">Location (ZIP)</div>
 			<div class="ui-block-a"><input type="number" id="locationZip" value="99352" /></div>
 		</div>

@@ -10,6 +10,8 @@ var FORECAST_IO = "forecast.io";
  */
 $(document).ready(function() {	
 	var options = loadOptions();
+	$('#dataSource-' + options.dataSource).prop('checked', 'checked');
+	$('input:radio[name=dataSource]').checkboxradio("refresh");
 	$('#locationZip').val(options.location.zip);
 	
 	loadCommute('morningCommute', options.morningCommute);
@@ -155,6 +157,7 @@ function saveOptions() {
 				var latLon = latLonList.split(' ')[0].split(',');
 				
 				var options = new Object();
+				options.dataSource = $('input:radio[name=dataSource]:checked').val();
 				
 				options.location = new Object();
 				options.location.zip = parseInt($('#locationZip').val());
