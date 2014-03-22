@@ -24,53 +24,86 @@
 		<a href="index.html" data-ajax="false" data-icon="check" onclick="saveOptions()">Save</a>
 	</div>
 	<div data-role="content">
-		<div data-role="fieldcontain">
-    		<label for="locationZip">Location (ZIP)</label>
-    		<input type="number" id="locationZip" value="99352" />
+		<div class="ui-grid-solo">
+			<div class="ui-block-a fieldTitle">Location (ZIP)</div>
+			<div class="ui-block-a"><input type="number" id="locationZip" value="99352" /></div>
 		</div>
-		<div data-role="fieldcontain">
-    		<label for="minTemp">Min Temperature (&deg;F)</label>
-    		<input type="number" id="minTemp" value="40" />
+	
+		<div class="separator"></div>
+
+		<div class="ui-grid-a">
+			<div class="ui-block-a centerAlign header">Start</div>
+			<div class="ui-block-b centerAlign header">End</div>
 		</div>
-		<div data-role="fieldcontain">
-    		<label for="maxTemp">Max Temperature (&deg;F)</label>
-    		<input type="number" id="maxTemp" value="100" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Morning Commute (time)</div>
+			<div class="ui-block-b rightAlign"><select id="morningCommuteEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="time" id="morningCommuteStart" value="06:00" /></div>
+			<div class="ui-block-b"><input type="time" id="morningCommuteEnd" value="07:00" /></div>
 		</div>
-		<div data-role="fieldcontain">
-    		<label for="maxPop">Max Precipitation (%)</label>
-    		<input type="number" id="maxPop" value="30" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Afternoon Commute (time)</div>
+			<div class="ui-block-b rightAlign"><select id="afternoonCommuteEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="time" id="afternoonCommuteStart" value="16:00" /></div>
+			<div class="ui-block-b"><input type="time" id="afternoonCommuteEnd" value="17:00" /></div>
 		</div>
-		<div data-role="fieldcontain">
-    		<label for="maxWind">Max Wind Speed (mph)</label>
-    		<input type="number" id="maxWind" value="15" />
+		
+		<div class="separator"></div>
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a centerAlign header">Caution</div>
+			<div class="ui-block-b centerAlign header">Drive</div>
 		</div>
-		<div data-role="fieldcontain">
-    		<label for="maxGust">Max Gust Speed (mph)</label>
-    		<input type="number" id="maxGust" value="15" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Min Temperature (&deg;F)</div>
+			<div class="ui-block-b rightAlign"><select id="minTempEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="number" id="minTempWarn" value="27" /></div>
+			<div class="ui-block-b"><input type="number" id="minTempDrive" value="25" /></div>
 		</div>
-		<div data-role="fieldcontain">
-    		<label for="beforeSunrise">Time Before Sunrise (min)</label>
-    		<input type="number" id="beforeSunrise" value="75" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Max Temperature (&deg;F)</div>
+			<div class="ui-block-b rightAlign"><select id="maxTempEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="number" id="maxTempWarn" value="95" /></div>
+			<div class="ui-block-b"><input type="number" id="maxTempDrive" value="100" /></div>
 		</div>
-		<div data-role="fieldcontain">
-    		<label for="afterSunset">Time After Sunset (min)</label>
-    		<input type="number" id="afterSunset" value="75" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Max Precipitation (%)</div>
+			<div class="ui-block-b rightAlign"><select id="maxPopEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="number" id="maxPopWarn" value="20" /></div>
+			<div class="ui-block-b"><input type="number" id="maxPopDrive" value="50" /></div>
 		</div>
-		<div data-role="fieldcontain" data-theme="b">
-			<label for="morningStart">Morning Commute Start</label>
-			<input type="time" id="morningStart" value="06:00" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Max Wind Speed (mph)</div>
+			<div class="ui-block-b rightAlign"><select id="maxWindEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="number" id="maxWindWarn" value="20" /></div>
+			<div class="ui-block-b"><input type="number" id="maxWindDrive" value="25" /></div>
 		</div>
-		<div data-role="fieldcontain" data-theme="b">
-			<label for="morningEnd">Morning Commute End</label>
-			<input type="time" id="morningEnd" value="07:00" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Max Gust Speed (mph)</div>
+			<div class="ui-block-b rightAlign"><select id="maxGustEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="number" id="maxGustWarn" value="20" /></div>
+			<div class="ui-block-b"><input type="number" id="maxGustDrive" value="25" /></div>
 		</div>
-		<div data-role="fieldcontain" data-theme="b">
-			<label for="afternoonStart">Afternoon Commute Start</label>
-			<input type="time" id="afternoonStart" value="16:00" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Time Before Sunrise (min)</div>
+			<div class="ui-block-b rightAlign"><select id="beforeSunriseEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="number" id="beforeSunriseWarn" value="75" /></div>
+			<div class="ui-block-b"><input type="number" id="beforeSunriseDrive" value="90" /></div>
 		</div>
-		<div data-role="fieldcontain" data-theme="b">
-			<label for="afternoonEnd">Afternoon Commute End</label>
-			<input type="time" id="afternoonEnd" value="17:00" />
+		
+		<div class="ui-grid-a">
+			<div class="ui-block-a fieldTitle">Time After Sunset (min)</div>
+			<div class="ui-block-b rightAlign"><select id="afterSunsetEnabled" data-role="slider" data-mini="true"><option value="false">Off</option><option value="true" selected>On</option></select> </div>
+			<div class="ui-block-a"><input type="number" id="afterSunsetWarn" value="75" /></div>
+			<div class="ui-block-b"><input type="number" id="afterSunsetDrive" value="90" /></div>
 		</div>
 	</div>
 </div>

@@ -15,25 +15,25 @@ $(document).ready(function() {
 	var options = loadOptions();
 	
 	// remote CORS proxy
-//	$.when( $.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()),
-//			$.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime())
+//	$.when( $.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()),
+//			$.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime())
 //	  	  ).then( success, failure );
 	
 	// local jsp proxy
-//	$.when( $.getJSON('proxy.jsp?' + encodeURIComponent('http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime())),
-//			$.getJSON('proxy.jsp?' + encodeURIComponent('http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()))
+//	$.when( $.getJSON('proxy.jsp?' + encodeURIComponent('http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime())),
+//			$.getJSON('proxy.jsp?' + encodeURIComponent('http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()))
 //		  ).then( success, failure );
 	
 	// local servlet proxy
-//	$.when( $.getJSON('daily?lat=' + options.locationLat + '&lon=' + options.locationLon),
-//			$.getJSON('hourly?lat=' + options.locationLat + '&lon=' + options.locationLon)
+//	$.when( $.getJSON('daily?lat=' + options.location.lat + '&lon=' + options.location.lon),
+//			$.getJSON('hourly?lat=' + options.location.lat + '&lon=' + options.location.lon)
 //		  ).then( success, failure );
 	
 	// YQL proxy - jsonCompat=new prevents YQL from formatting JSON (lossy, removes single sized arrays and turns numbers to strings)
 	// See http://developer.yahoo.com/yql/guide/yql_url.html
 	// See http://developer.yahoo.com/yql/guide/json_to_json.html
-	$.when( $.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()) + '"&format=json&jsonCompat=new'),
-			$.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.locationLat + '&lon=' + options.locationLon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()) + '"&format=json&jsonCompat=new')
+	$.when( $.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()) + '"&format=json&jsonCompat=new'),
+			$.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()) + '"&format=json&jsonCompat=new')
 		  ).then( successYql, failure );
 	
 	$.mobile.loading('show');
@@ -82,14 +82,14 @@ function success( daily, hourly ) {
 	day7.setDate(day7.getDate() + 7);
 	
 	var sun = new Array();
-	sun[0] = getSunriseSunset(today, options.locationLat, options.locationLon);
-	sun[1] = getSunriseSunset(day1, options.locationLat, options.locationLon);
-	sun[2] = getSunriseSunset(day2, options.locationLat, options.locationLon);
-	sun[3] = getSunriseSunset(day3, options.locationLat, options.locationLon);
-	sun[4] = getSunriseSunset(day4, options.locationLat, options.locationLon);
-	sun[5] = getSunriseSunset(day5, options.locationLat, options.locationLon);
-	sun[6] = getSunriseSunset(day6, options.locationLat, options.locationLon);
-	sun[7] = getSunriseSunset(day7, options.locationLat, options.locationLon);
+	sun[0] = getSunriseSunset(today, options.location.lat, options.location.lon);
+	sun[1] = getSunriseSunset(day1, options.location.lat, options.location.lon);
+	sun[2] = getSunriseSunset(day2, options.location.lat, options.location.lon);
+	sun[3] = getSunriseSunset(day3, options.location.lat, options.location.lon);
+	sun[4] = getSunriseSunset(day4, options.location.lat, options.location.lon);
+	sun[5] = getSunriseSunset(day5, options.location.lat, options.location.lon);
+	sun[6] = getSunriseSunset(day6, options.location.lat, options.location.lon);
+	sun[7] = getSunriseSunset(day7, options.location.lat, options.location.lon);
   
 	var hours = new Array();	
 	var periods = new Array();
@@ -317,17 +317,14 @@ function evaluateHours(hours, options) {
 			hour.period.commuteClass = RIDE_CLASS;
 		}
 		
-		if (new Date(hour.time.valueOf()).addMinutes(options.beforeSunrise) < hour.period.sunrise) {
-			hour.commuteImage = CAUTION; // TODO add option to select drive/warn for parameters
-			hour.commuteClass = CAUTION_CLASS;
+		if ((options.beforeSunrise.enabled && hour.period.sunrise > new Date(hour.time.valueOf()).addMinutes(options.beforeSunrise.warn)) ||
+			(options.afterSunset.enabled && hour.period.sunset < new Date(hour.time.valueOf()).addMinutes(-1 * options.afterSunset.warn)) ||
+			(options.minTemp.enabled && hour.temperature < options.minTemp.warn) ||
+			(options.maxTemp.enabled && hour.temperature > options.maxTemp.warn) ||
+			(options.maxPop.enabled && hour.pop > options.maxPop.warn) ||
+			(options.maxWind.enabled && hour.windSpeed > options.maxWind.warn) ||
+			(options.maxGust.enabled && hour.gustSpeed > options.maxGust.warn)) {
 			
-			if (hour.period.commuteImage != DRIVE ) {
-				hour.period.commuteImage = CAUTION;
-				hour.period.commuteClass = CAUTION_CLASS;
-			}
-		}
-		
-		if (new Date(hour.time.valueOf()).addMinutes(-1 * options.afterSunset) > hour.period.sunset) {
 			hour.commuteImage = CAUTION;
 			hour.commuteClass = CAUTION_CLASS;
 			
@@ -337,12 +334,14 @@ function evaluateHours(hours, options) {
 			}
 		}			
 		
-		if (hour.temperature < options.minTemp ||
-			hour.temperature > options.maxTemp ||
-			hour.pop > options.maxPop ||
-			hour.windSpeed > options.maxWind ||
-			hour.gustSpeed > options.maxGust) {
-		
+		if ((options.beforeSunrise.enabled && hour.period.sunrise > new Date(hour.time.valueOf()).addMinutes(options.beforeSunrise.drive)) ||
+			(options.afterSunset.enabled && hour.period.sunset < new Date(hour.time.valueOf()).addMinutes(-1 * options.afterSunset.drive)) ||
+			(options.minTemp.enabled && hour.temperature < options.minTemp.drive) ||
+			(options.maxTemp.enabled && hour.temperature > options.maxTemp.drive) ||
+			(options.maxPop.enabled && hour.pop > options.maxPop.drive) ||
+			(options.maxWind.enabled && hour.windSpeed > options.maxWind.drive) ||
+			(options.maxGust.enabled && hour.gustSpeed > options.maxGust.drive)) {
+			
 			hour.commuteImage = DRIVE;
 			hour.commuteClass = DRIVE_CLASS;
 			hour.period.commuteImage = DRIVE;
@@ -373,18 +372,18 @@ function evaluatePeriods(periods, hours, options) {
 				var dayHours = new Array();
 				
 				var periodDate = period.time.toString('M-d-yyyy') + ' ';
-				var morningStart = Date.parse(periodDate + options.morningStart).setMinutes(0); // set to the start of the hour
-				var morningEnd = Date.parse(periodDate + options.morningEnd);
+				var morningStart = Date.parse(periodDate + options.morningCommute.start).setMinutes(0); // set to the start of the hour
+				var morningEnd = Date.parse(periodDate + options.morningCommute.end);
 				if (morningEnd.getMinutes() > 0) {
 					morningEnd.add(1).hours().setMinutes(0); // set to the start of the next hour
 				}
-				var afternoonStart = Date.parse(periodDate + options.afternoonStart).setMinutes(0); // set to the start of the hour
-				var afternoonEnd = Date.parse(periodDate + options.afternoonEnd);
+				var afternoonStart = Date.parse(periodDate + options.afternoonCommute.start).setMinutes(0); // set to the start of the hour
+				var afternoonEnd = Date.parse(periodDate + options.afternoonCommute.end);
 				if (afternoonEnd.getMinutes() > 0) {
 					afternoonEnd.add(1).hours().setMinutes(0); // set to the start of the next hour
 				}
 				
-				for (var i = 0; i < hours.length && hours[i].time <= afternoonEnd; i++) { // FIXME not the most efficient search algorithm...
+				for (var i = 0; i < hours.length && hours[i].time <= afternoonEnd; i++) { // TODO not the most efficient search algorithm...
 					if (hours[i].time >= morningStart && hours[i].time <= morningEnd) {
 						morningHours.push(hours[i]);
 					}
@@ -401,23 +400,27 @@ function evaluatePeriods(periods, hours, options) {
 				period.commuteImage = RIDE; // default to RIDE
 				period.commuteClass = RIDE_CLASS;
 				
-				for (var i = 0; i < morningHours.length; i++) {
-					if (morningHours[i].commuteImage == DRIVE) {
-						period.commuteImage = DRIVE;
-						period.commuteClass = DRIVE_CLASS;
-					} else if (morningHours[i].commuteImage == CAUTION && period.commuteImage != DRIVE) {
-						period.commuteImage = CAUTION;
-						period.commuteClass = CAUTION_CLASS;
+				if (options.morningCommute.enabled) {
+					for (var i = 0; i < morningHours.length; i++) {
+						if (morningHours[i].commuteImage == DRIVE) {
+							period.commuteImage = DRIVE;
+							period.commuteClass = DRIVE_CLASS;
+						} else if (morningHours[i].commuteImage == CAUTION && period.commuteImage != DRIVE) {
+							period.commuteImage = CAUTION;
+							period.commuteClass = CAUTION_CLASS;
+						}
 					}
 				}
 				
-				for (var i = 0; i < afternoonHours.length; i++) {
-					if (afternoonHours[i].commuteImage == DRIVE) {
-						period.commuteImage = DRIVE;
-						period.commuteClass = DRIVE_CLASS;
-					} else if (afternoonHours[i].commuteImage == CAUTION && period.commuteImage != DRIVE) {
-						period.commuteImage = CAUTION;
-						period.commuteClass = CAUTION_CLASS;
+				if (options.afternoonCommute.enabled) {
+					for (var i = 0; i < afternoonHours.length; i++) {
+						if (afternoonHours[i].commuteImage == DRIVE) {
+							period.commuteImage = DRIVE;
+							period.commuteClass = DRIVE_CLASS;
+						} else if (afternoonHours[i].commuteImage == CAUTION && period.commuteImage != DRIVE) {
+							period.commuteImage = CAUTION;
+							period.commuteClass = CAUTION_CLASS;
+						}
 					}
 				}
 				
@@ -431,14 +434,25 @@ function evaluatePeriods(periods, hours, options) {
 				}
 			}
 		} else {
+			// no hourly data available
 			period.commuteImage = RIDE;	
 			period.commuteClass = RIDE_CLASS;
 			
-			if (period.temperature < options.minTemp ||
-				period.temperature > options.maxTemp ||
-				period.pop > options.maxPop ||
-				period.windSpeed > options.maxWind ||
-				period.gustSpeed > options.maxGust) {
+			if (period.temperature < options.minTemp.warn ||
+				period.temperature > options.maxTemp.warn ||
+				period.pop > options.maxPop.warn ||
+				period.windSpeed > options.maxWind.warn ||
+				period.gustSpeed > options.maxGust.warn) {
+
+				period.commuteImage = CAUTION;
+				period.commuteClass = CAUTION_CLASS;
+			}
+			
+			if (period.temperature < options.minTemp.drive ||
+				period.temperature > options.maxTemp.drive ||
+				period.pop > options.maxPop.drive ||
+				period.windSpeed > options.maxWind.drive ||
+				period.gustSpeed > options.maxGust.drive) {
 
 				period.commuteImage = DRIVE;
 				period.commuteClass = DRIVE_CLASS;
