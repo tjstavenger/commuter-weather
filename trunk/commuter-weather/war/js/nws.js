@@ -3,9 +3,9 @@ function loadNws() {
 	var options = loadOptions();
 	
 	// remote CORS proxy
-	$.when( $.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()),
-			$.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime())
-	  	  ).then( successNws, failureNws );
+//	$.when( $.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()),
+//			$.getJSON('http://www.corsproxy.com/mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime())
+//	  	  ).then( successNws, failureNws );
 	
 	// local jsp proxy
 //	$.when( $.getJSON('proxy.jsp?' + encodeURIComponent('http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime())),
@@ -20,9 +20,9 @@ function loadNws() {
 	// YQL proxy - jsonCompat=new prevents YQL from formatting JSON (lossy, removes single sized arrays and turns numbers to strings)
 	// See http://developer.yahoo.com/yql/guide/yql_url.html
 	// See http://developer.yahoo.com/yql/guide/json_to_json.html
-//	$.when( $.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()) + '"&format=json&jsonCompat=new'),
-//			$.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()) + '"&format=json&jsonCompat=new')
-//		  ).then( successNwsYql, failureNws );
+	$.when( $.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()) + '"&format=json&jsonCompat=new'),
+			$.getJSON('http://query.yahooapis.com/v1/public/yql?q=' + encodeURIComponent('select * from json where url = "http://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime()) + '"&format=json&jsonCompat=new')
+		  ).then( successNwsYql, failureNws );
 }
 
 /**
