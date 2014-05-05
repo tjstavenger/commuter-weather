@@ -50,7 +50,7 @@ function loadOptions() {
 		options.maxTemp = newOption(true, 95, 100);
 		options.maxPop = newOption(true, 20, 50);
 		options.maxWind = newOption(true, 20, 25);
-		options.maxGust = newOption(true, 20, 25);
+		options.maxGust = newOption(true, 25, 30);
 		options.beforeSunrise = newOption(true, 75, 90);
 		options.afterSunset = newOption(true, 75, 90);
 	}
