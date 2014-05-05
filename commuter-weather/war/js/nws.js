@@ -211,7 +211,7 @@ function parsePeriod(index, daily, hourly, sun) {
 			hour.weather = hourlyData.weather[i];
 			hour.weatherImage = 'http://forecast.weather.gov/images/wtf/medium/' + hourlyData.iconLink[i];
 			hour.temperature = hourlyData.temperature[i];
-			hour.windChill = hourlyData.windChill[i] == null || hourlyData.windChill[i] == 'null' || hourlyData.windChill[i] > hour.temperature ? hour.temperature : hourlyData.windChill[i];
+			hour.windChill = hourlyData.windChill == null || hourlyData.windChill[i] == null || hourlyData.windChill[i] == 'null' || hourlyData.windChill[i] > hour.temperature ? hour.temperature : hourlyData.windChill[i];
 			hour.relativeHumidity = hourlyData.relativeHumidity[i];
 			hour.dewPoint = null;
 			hour.pop = hourlyData.pop[i];
