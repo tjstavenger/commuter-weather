@@ -47,12 +47,12 @@ function loadOptions() {
 		options.afternoonCommute = newCommute(true, '16:00', '17:00');
 		
 		options.minTemp = newOption(true, 27, 25);		
-		options.maxTemp = newOption(true, 95, 100);
-		options.maxPop = newOption(true, 20, 50);
-		options.maxWind = newOption(true, 20, 25);
-		options.maxGust = newOption(true, 25, 30);
-		options.beforeSunrise = newOption(true, 75, 90);
-		options.afterSunset = newOption(true, 75, 90);
+		options.maxTemp = newOption(true, 95, 105);
+		options.maxPop = newOption(true, 30, 60);
+		options.maxWind = newOption(true, 25, 30);
+		options.maxGust = newOption(true, 30, 35);
+		options.beforeSunrise = newOption(true, 90, 120);
+		options.afterSunset = newOption(true, 90, 120);
 	}
 	
 	return options;
