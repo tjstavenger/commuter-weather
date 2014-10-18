@@ -20,7 +20,6 @@ $(document).ready(function() {
 		loadForecastIo();
 	}
 	
-	
 	$.mobile.loading('show');
 });
 
