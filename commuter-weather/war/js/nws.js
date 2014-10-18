@@ -130,7 +130,7 @@ function parseCurrent(response, sun) {
 	period.sunset = sun.sunset;
 	period.weather = response.currentobservation.Weather;
 	period.weatherImage = 'http://forecast.weather.gov/images/wtf/medium/' + response.currentobservation.Weatherimage;
-	period.pop = null;
+	period.pop = 0;
 	period.temperatureLabel = null;
 	period.temperature = response.currentobservation.Temp;
 	period.relativeHumidity = response.currentobservation.Relh;
@@ -215,7 +215,7 @@ function parsePeriod(index, daily, hourly, sun) {
 			hour.windChill = hourlyData.windChill == null || hourlyData.windChill[i] == null || hourlyData.windChill[i] == 'null' || hourlyData.windChill[i] > hour.temperature ? hour.temperature : hourlyData.windChill[i];
 			hour.relativeHumidity = hourlyData.relativeHumidity[i];
 			hour.dewPoint = null;
-			hour.pop = hourlyData.pop[i];
+			hour.pop = Number(hourlyData.pop[i]);
 			hour.cloudAmount = hourlyData.cloudAmount[i];
 			hour.windDirection = hourlyData.windDirectionCardinal[i];
 			hour.windSpeed = hourlyData.windSpeed[i] == null || hourlyData.windSpeed[i] == 'null' ? 0 : Number(hourlyData.windSpeed[i]);
