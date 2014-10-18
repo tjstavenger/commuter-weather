@@ -42,6 +42,11 @@ function loadOptions() {
 		options.location.zip = 99352;
 		options.location.lat = 46.3;
 		options.location.lon = -119.31;
+		/*
+		options.location.zip = 99354;
+		options.location.lat = 46.34947;
+		options.location.lon = -119.27781;
+		*/
 		
 		options.morningCommute = newCommute(true, '06:00', '07:00');
 		options.afternoonCommute = newCommute(true, '16:00', '17:00');
