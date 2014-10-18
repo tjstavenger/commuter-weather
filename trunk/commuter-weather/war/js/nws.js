@@ -191,9 +191,10 @@ function parsePeriod(index, daily, hourly, sun) {
 	
 	period.hourly = new Array();
 	var hourlyData = hourly[period.name.replace(/ /g, '').replace(/\'/g, '_')]; // hourly 'period' matches daily after removing spaces and single quotes
-	var maxWindDirection = '';
-	var maxWindSpeed = 0;
-	var maxGustSpeed = 0;	
+	
+	period.windDirection = '';
+	period.windSpeed = 0;
+	period.gustSpeed = 0;
 	
 	if (hourlyData) { // NWS web service returns period names that don't exist as properties (towards the end of the forecast period)
 		for (var i = 0; i < hourlyData.time.length; i++) {	
@@ -225,17 +226,17 @@ function parsePeriod(index, daily, hourly, sun) {
 			
 			period.hourly[i] = hour;
 			
-			if (hour.windSpeed > maxWindSpeed || hour.gustSpeed > maxGustSpeed) {
-				maxWindDirection = hour.windDirection;
-				maxWindSpeed = hour.windSpeed;
-				maxGustSpeed = hour.gustSpeed;
+			if (hour.windSpeed > period.windSpeed || hour.gustSpeed > period.gustSpeed) {
+				period.windDirection = hour.windDirection;
+				period.windSpeed = hour.windSpeed;
+				period.gustSpeed = hour.gustSpeed;
 			}	
+			
+			if (hour.pop > period.pop) {
+				period.pop = hour.pop;
+			}
 		}
 	}
-		
-	period.windDirection = maxWindDirection;
-	period.windSpeed = maxWindSpeed;
-	period.gustSpeed = maxGustSpeed;
 	
 	calculateApparentTemperature(period);
 	
