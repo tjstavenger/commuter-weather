@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<cronentries>
+  <cron>
+    <url>/dailyCron?lat=46.3&amp;lon=-119.31</url>
+    <description>Cache daily forecast for 99352</description>
+    <schedule>every 30 minutes from 00:20 to 23:50</schedule>
+  </cron>
+   <cron>
+    <url>/hourlyCron?lat=46.3&amp;lon=-119.31</url>
+    <description>Cache hourly forecast for 99352</description>
+    <schedule>every 30 minutes from 00:20 to 23:50</schedule>
+  </cron>
+</cronentries>
