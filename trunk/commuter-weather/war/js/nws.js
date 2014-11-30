@@ -87,6 +87,8 @@ function successNws( daily, hourly ) {
 	periods[0] = parseCurrent(daily[0], sun[0]);
 	var day = 0;
 		
+	correctHourly(hourly[0]);
+	
 	for (var i = 0; i < daily[0].time.startPeriodName.length; i++) { 
 		periods[i + 1] = parsePeriod(i, daily[0], hourly[0], sun[day]);
 		
@@ -289,4 +291,103 @@ function calculateHeatIndex(tempf, humid) {
  */
 function calculateWindchill(tempf, windmph) {
 	return Math.round(35.74+0.6215*tempf-35.75*(Math.pow(windmph,0.16))+0.4275*tempf* (Math.pow(windmph,0.16)));
+}
+
+/**
+ * NWS hourly data in the evenings always starts at 6pm, even if it is later at night. Shift the time to where it should be.
+ * 
+ * TODO not sure how well the time diff calculation would work for weather forecasts in different time zones...
+ * 
+ * @param hourly NWS response data for hourly forecast
+ */
+function correctHourly(hourly) {
+	var all = [];
+	
+	// put all data into one array
+	for (var i = 0; i < 14; i++) {
+		var period = hourly.PeriodNameList[i.toString()];
+		
+		if (hourly.hasOwnProperty(period)) {
+			for (var j = 0; j < hourly[period].unixtime.length; j++) {	
+				all.push({
+					periodName: hourly[period].periodName,
+					time: hourly[period].time[j],
+					unixtime: hourly[period].unixtime[j],
+					temperature: hourly[period].temperature[j],
+					windChill: hourly[period].windChill[j],
+					windSpeed: hourly[period].windSpeed[j],
+					cloudAmount: hourly[period].cloudAmount[j],
+					pop: hourly[period].pop[j],
+					relativeHumidity: hourly[period].relativeHumidity[j],
+					windGust: hourly[period].windGust[j],
+					windDirectionCardinal: hourly[period].windDirectionCardinal[j],
+					windDirection: hourly[period].windDirection[j],
+					iconLink: hourly[period].iconLink[j],
+					weather: hourly[period].weather[j]
+				});
+			}
+		}
+	}
+		
+	// shift the time for all hourly forecast data, assuming that hourly forecasts start for the next hour (the NWS unixtimes in the evenings are all sorts of mixed (calculate to tomorrow evening)
+	var thisHour = new Date();
+	thisHour.setMinutes(0,0,0);
+	var nextHour = new Date(thisHour.valueOf()).add(1).hours().valueOf() / 1000; // NWS unixtime in seconds
+	
+	for (var i = 0; i < all.length; i++) {
+		all[i].unixtime = nextHour;
+		nextHour += 3600;
+	}
+	
+	// put back into periods
+	var allIndex = 0;
+	
+	var last;
+	
+	if (thisHour.getHours() < 18) {
+		last = Date.parse('today').setHours(17) / 1000;
+	} else {
+		last = Date.parse('tomorrow').setHours(5) / 1000;
+	}
+	
+	for (var i = 0; i < 14; i++) {
+		var period = hourly.PeriodNameList[i.toString()];
+		
+		if (hourly.hasOwnProperty(period)) {		
+			// setup new arrays
+			hourly[period].time = [];
+			hourly[period].unixtime = [];
+			hourly[period].temperature = [];
+			hourly[period].windChill = [];
+			hourly[period].windSpeed = [];
+			hourly[period].cloudAmount = [];
+			hourly[period].pop = [];
+			hourly[period].relativeHumidity = [];
+			hourly[period].windGust = [];
+			hourly[period].windDirectionCardinal = [];
+			hourly[period].windDirection = [];
+			hourly[period].iconLink = [];
+			hourly[period].weather = [];
+			
+			while (allIndex < all.length && all[allIndex].unixtime <= last) {
+				hourly[period].time.push(new Date(Number(all[allIndex].unixtime) * 1000).toString('h tt'));
+				hourly[period].unixtime.push(all[allIndex].unixtime);
+				hourly[period].temperature.push(all[allIndex].temperature);
+				hourly[period].windChill.push(all[allIndex].windChill);
+				hourly[period].windSpeed.push(all[allIndex].windSpeed);
+				hourly[period].cloudAmount.push(all[allIndex].cloudAmount);
+				hourly[period].pop.push(all[allIndex].pop);
+				hourly[period].relativeHumidity.push(all[allIndex].relativeHumidity);
+				hourly[period].windGust.push(all[allIndex].windGust);
+				hourly[period].windDirectionCardinal.push(all[allIndex].windDirectionCardinal);
+				hourly[period].windDirection.push(all[allIndex].windDirection);
+				hourly[period].iconLink.push(all[allIndex].iconLink);
+				hourly[period].weather.push(all[allIndex].weather);
+				
+				allIndex++;
+			}
+			
+			last += (60 * 60 * 12);
+		}
+	}
 }
