@@ -344,10 +344,10 @@ function correctHourly(hourly) {
 	
 	var last;
 	
-	if (thisHour.getHours() < 6) {
+	if (thisHour.getHours() < 5) {
 		last = Date.parse('today').setHours(5) / 1000;
 	}
-	else if (thisHour.getHours() < 18) {
+	else if (thisHour.getHours() < 17) {
 		last = Date.parse('today').setHours(17) / 1000;
 	} else {
 		last = Date.parse('tomorrow').setHours(5) / 1000;
