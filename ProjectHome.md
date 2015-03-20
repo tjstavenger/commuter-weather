@@ -1,0 +1,1 @@
+Use weather forecast to determine if a bicycle commuter should ride or drive
