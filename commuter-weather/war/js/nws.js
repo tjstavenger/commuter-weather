@@ -314,7 +314,7 @@ function correctHourly(hourly) {
 					time: hourly[period].time[j],
 					unixtime: hourly[period].unixtime[j],
 					temperature: hourly[period].temperature[j],
-					windChill: hourly[period].windChill[j],
+					windChill: hourly[period].windChill ? hourly[period].windChill[j] : hourly[period].temperature[j],
 					windSpeed: hourly[period].windSpeed[j],
 					cloudAmount: hourly[period].cloudAmount[j],
 					pop: hourly[period].pop[j],
