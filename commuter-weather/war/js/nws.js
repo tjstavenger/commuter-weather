@@ -130,7 +130,7 @@ function parseCurrent(response, sun) {
 	var period = new Object();
 	period.current = true;
 	period.dataSource ='<a href="http://www.weather.gov/" class="ui-link">National Weather Service</a>';
-	period.time = Date.parse(response.currentobservation.Date);
+	period.time = Date.parse(response.currentobservation.Date) ? Date.parse(response.currentobservation.Date) : new Date();
 	period.name = response.location.areaDescription;
 	period.night = true;
 	period.sunrise = sun.sunrise;
