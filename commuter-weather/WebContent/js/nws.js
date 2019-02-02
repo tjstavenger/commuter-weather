@@ -10,23 +10,6 @@ function loadNws() {
 }
 
 /**
- * On success of receiving daily and hourly NWS data through YQL proxy, parse data and load HTML.
- * 
- * Get the YQL response data in the same format as if received directly from NWS.
- *  
- * @param daily NWS response data for daily forecast
- * @param hourly NWS response data for hourly forecast
- */
-function successNwsYql( daily, hourly ) {
-	if (daily[0].query.results && hourly[0].query.results) { // yql timeouts return "success" for some reason...
-		successNws([daily[0].query.results.json], [hourly[0].query.results.json]);
-	}
-	else {
-		failureNws(daily, hourly);
-	}
-}
-
-/**
  * On success of receiving daily and hourly NWS data, parse data and load HTML
  * 
  * @param daily NWS response data for daily forecast
