@@ -3,8 +3,8 @@ function loadNws() {
 	var options = loadOptions();
 	
 	// remote CORS proxy
-	$.when( $.getJSON('https://cors.io/?https://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()),
-			$.getJSON('https://cors.io/?https://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime())
+	$.when( $.getJSON('https://commuter-weather.herokuapp.com/?https://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=json&rand=' + today.getTime()),
+			$.getJSON('https://commuter-weather.herokuapp.com/?https://mobile.weather.gov/wtf/MapClick.php?lat=' + options.location.lat + '&lon=' + options.location.lon + '&unit=0&lg=english&FcstType=digitalJSON&rand=' + today.getTime())
 	  	  ).then( successNws, failureNws );
 	  	  
 }
