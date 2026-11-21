@@ -15,7 +15,12 @@ export function CommuteHero({ nextCommute }) {
     [STATUS.DRIVE]: './images/drive.png'
   };
 
-  const statusText = status.toUpperCase();
+  // Temp display: show range if min != max, otherwise single value
+  const tempDisplay = metrics
+    ? (metrics.minTemp !== null && metrics.maxTemp !== null && metrics.minTemp !== metrics.maxTemp)
+      ? `${metrics.minTemp}–${metrics.maxTemp}°`
+      : `${metrics.minTemp ?? metrics.maxTemp}°`
+    : null;
 
   return html`
     <div class="hero-card">
@@ -25,49 +30,46 @@ export function CommuteHero({ nextCommute }) {
       </div>
 
       <div class="hero-status-row">
-        <div class="hero-badge-wrap">
-          <img 
-            src=${imageMap[status] || './images/ride.png'} 
-            alt=${statusText} 
-            class="hero-status-img"
-          />
-          <div>
-            <div class="hero-status-text hero-status-${status}">
-              ${statusText}
+        <img
+          src=${imageMap[status] || './images/ride.png'}
+          alt=${status.toUpperCase()}
+          class="hero-status-img hero-status-ring-${status}"
+        />
+
+        ${metrics ? html`
+          <div class="hero-summary-metrics">
+            <div class="metric-item" title="Temperature Range">
+              <img src="./images/temp.svg" alt="Temp" />
+              <span><strong>${tempDisplay}</strong> F</span>
             </div>
-            ${reasons && reasons.length > 0 ? html`
-              <div class="hero-chips-wrap">
-                ${reasons.map(r => html`
-                  <span class="chip chip-${status}">${r}</span>
-                `)}
-              </div>
-            ` : html`
-              <span class="chip">Favorable Conditions</span>
-            `}
+            <div class="metric-item" title="Apparent Temperature">
+              <img src="./images/windChill.svg" alt="Apparent" />
+              <span>Feels <strong>${metrics.apparentTemp}°</strong></span>
+            </div>
+            <div class="metric-item" title="Chance of Precipitation">
+              <img src="./images/precip.svg" alt="Precipitation" />
+              <span><strong>${metrics.pop}%</strong> rain</span>
+            </div>
+            <div class="metric-item" title="Sustained Wind / Gust">
+              <img src="./images/wind.svg" alt="Wind" />
+              <span>
+                <strong>${metrics.wind}</strong>mph
+                ${metrics.gust > 0 ? html` g<strong>${metrics.gust}</strong>` : ''}
+              </span>
+            </div>
           </div>
-        </div>
+        ` : null}
       </div>
 
-      ${metrics ? html`
-        <div class="hero-summary-metrics">
-          <div class="metric-item" title="Expected Temperature">
-            <img src="./images/temp.svg" alt="Temp" />
-            <span><strong>${metrics.temp}°</strong> F</span>
-          </div>
-          <div class="metric-item" title="Apparent Temperature">
-            <img src="./images/windChill.svg" alt="Apparent" />
-            <span>Feels <strong>${metrics.apparentTemp}°</strong></span>
-          </div>
-          <div class="metric-item" title="Chance of Precipitation">
-            <img src="./images/precip.svg" alt="Precipitation" />
-            <span><strong>${metrics.pop}%</strong> rain</span>
-          </div>
-          <div class="metric-item" title="Wind and Gusts">
-            <img src="./images/wind.svg" alt="Wind" />
-            <span><strong>${metrics.wind}</strong> mph ${metrics.gust > 0 ? html`(g ${metrics.gust})` : ''}</span>
-          </div>
+      ${reasons && reasons.length > 0 ? html`
+        <div class="hero-chips-wrap">
+          ${reasons.map(r => html`
+            <span class="chip chip-${status}">${r}</span>
+          `)}
         </div>
-      ` : null}
+      ` : html`
+        <span class="chip">Favorable Conditions</span>
+      `}
     </div>
   `;
 }

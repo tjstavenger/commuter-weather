@@ -106,7 +106,8 @@ export function App() {
 
     let worstStatus = STATUS.RIDE;
     const allReasons = [];
-    let sumTemp = 0;
+    let minTemp = Infinity;
+    let maxTemp = -Infinity;
     let sumApparent = 0;
     let maxWind = 0;
     let maxGust = 0;
@@ -119,10 +120,11 @@ export function App() {
         worstStatus = STATUS.CAUTION;
       }
       allReasons.push(...h.evaluation.reasons);
-      sumTemp += h.temperature;
+      if (h.temperature < minTemp) minTemp = h.temperature;
+      if (h.temperature > maxTemp) maxTemp = h.temperature;
       sumApparent += (h.evaluation.apparentTemp || h.temperature);
       if (h.windSpeed > maxWind) maxWind = h.windSpeed;
-      if (h.gustSpeed > maxGust) maxGust = h.gustSpeed;
+      if ((h.gustSpeed || 0) > maxGust) maxGust = h.gustSpeed || 0;
       if (h.pop > maxPop) maxPop = h.pop;
     }
 
@@ -133,7 +135,8 @@ export function App() {
       status: worstStatus,
       reasons: [...new Set(allReasons)],
       metrics: {
-        temp: Math.round(sumTemp / count),
+        minTemp: isFinite(minTemp) ? minTemp : null,
+        maxTemp: isFinite(maxTemp) ? maxTemp : null,
         apparentTemp: Math.round(sumApparent / count),
         wind: maxWind,
         gust: maxGust,

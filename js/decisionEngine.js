@@ -232,11 +232,24 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
       }
     }
 
+    let ntMinTemp = Infinity, ntMaxTemp = -Infinity, ntMaxWind = 0, ntMaxGust = 0;
+    for (const h of evaluatedHours) {
+      if (h.temperature < ntMinTemp) ntMinTemp = h.temperature;
+      if (h.temperature > ntMaxTemp) ntMaxTemp = h.temperature;
+      if (h.windSpeed > ntMaxWind) ntMaxWind = h.windSpeed;
+      if ((h.gustSpeed || 0) > ntMaxGust) ntMaxGust = h.gustSpeed || 0;
+    }
     return {
       ...period,
       status: worstStatus,
       reasons: [...new Set(allReasons)].slice(0, 3),
-      hours: evaluatedHours
+      hours: evaluatedHours,
+      summary: {
+        minTemp: isFinite(ntMinTemp) ? ntMinTemp : null,
+        maxTemp: isFinite(ntMaxTemp) ? ntMaxTemp : null,
+        maxWind: ntMaxWind,
+        maxGust: ntMaxGust
+      }
     };
   }
 
@@ -297,6 +310,18 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
     }
   }
 
+  // Compute period-wide summary stats across ALL hours (not just commute)
+  let periodMinTemp = Infinity;
+  let periodMaxTemp = -Infinity;
+  let periodMaxWind = 0;
+  let periodMaxGust = 0;
+  for (const h of evaluatedHours) {
+    if (h.temperature < periodMinTemp) periodMinTemp = h.temperature;
+    if (h.temperature > periodMaxTemp) periodMaxTemp = h.temperature;
+    if (h.windSpeed > periodMaxWind) periodMaxWind = h.windSpeed;
+    if ((h.gustSpeed || 0) > periodMaxGust) periodMaxGust = h.gustSpeed || 0;
+  }
+
   return {
     ...period,
     status: periodStatus,
@@ -305,6 +330,12 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
     commuteHours: {
       morning: morningHours,
       afternoon: afternoonHours
+    },
+    summary: {
+      minTemp: isFinite(periodMinTemp) ? periodMinTemp : null,
+      maxTemp: isFinite(periodMaxTemp) ? periodMaxTemp : null,
+      maxWind: periodMaxWind,
+      maxGust: periodMaxGust
     }
   };
 }

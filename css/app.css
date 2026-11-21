@@ -257,32 +257,21 @@ body {
 .hero-status-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 1rem;
 }
 
-.hero-badge-wrap {
-  display: flex;
-  align-items: center;
-  gap: 0.85rem;
-}
-
+/* Colored ring on the status image — replaces the big DRIVE/RIDE/CAUTION text */
 .hero-status-img {
-  width: 56px;
-  height: 56px;
+  width: 60px;
+  height: 60px;
   border-radius: var(--radius-md);
+  border: 3px solid transparent;
+  flex-shrink: 0;
 }
 
-.hero-status-text {
-  font-size: 1.75rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: -0.02em;
-}
-
-.hero-status-ride { color: var(--ride-color); }
-.hero-status-caution { color: var(--caution-color); }
-.hero-status-drive { color: var(--drive-color); }
+.hero-status-ring-ride    { border-color: var(--ride-border); box-shadow: 0 0 0 1px var(--ride-border); }
+.hero-status-ring-caution { border-color: var(--caution-border); box-shadow: 0 0 0 1px var(--caution-border); }
+.hero-status-ring-drive   { border-color: var(--drive-border); box-shadow: 0 0 0 1px var(--drive-border); }
 
 .hero-chips-wrap {
   display: flex;
@@ -293,11 +282,12 @@ body {
 
 .hero-summary-metrics {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-  gap: 0.75rem;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 0.6rem;
   background-color: var(--bg-primary);
   border-radius: var(--radius-md);
-  padding: 0.75rem;
+  padding: 0.65rem;
+  flex: 1;
 }
 
 .metric-item {
@@ -427,7 +417,13 @@ body {
   height: 40px;
   border-radius: var(--radius-sm);
   object-fit: contain;
+  border: 2px solid transparent;
 }
+
+/* Status ring on the weather icon — replaces text badge */
+.status-ring-ride    { border-color: var(--ride-border); box-shadow: 0 0 0 1px var(--ride-border); }
+.status-ring-caution { border-color: var(--caution-border); box-shadow: 0 0 0 1px var(--caution-border); }
+.status-ring-drive   { border-color: var(--drive-border); box-shadow: 0 0 0 1px var(--drive-border); }
 
 .period-title-wrap {
   display: flex;
@@ -452,7 +448,8 @@ body {
 .period-header-right {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.4rem;
+  flex-shrink: 0;
 }
 
 .period-chevron {
@@ -477,6 +474,39 @@ body {
   color: var(--text-secondary);
   line-height: 1.5;
   margin-bottom: 1rem;
+}
+
+.period-reasons-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.period-reasons-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-right: 0.1rem;
+}
+
+/* Smaller chip for inline use in hourly table */
+.chip-xs {
+  font-size: 0.65rem;
+  padding: 0.1rem 0.35rem;
+}
+
+.gust-val {
+  font-weight: 700;
+  color: var(--caution-color);
+}
+
+.hourly-ok {
+  color: var(--ride-color);
+  font-size: 0.85rem;
 }
 
 /* ==========================================================================

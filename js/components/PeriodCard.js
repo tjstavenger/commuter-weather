@@ -7,51 +7,59 @@ const html = htm.bind(h);
 export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, onSelect }) {
   const status = period.status || 'ride';
   const reasons = period.reasons || [];
-  const statusUpper = status.toUpperCase();
+  const summary = period.summary || {};
 
   const formattedDate = period.startTime
     ? new Date(period.startTime).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })
     : '';
 
+  // Temp range for subline
+  const tempRange = (summary.minTemp !== null && summary.maxTemp !== null)
+    ? (summary.minTemp !== summary.maxTemp
+        ? `${summary.minTemp}–${summary.maxTemp}°F`
+        : `${summary.minTemp}°F`)
+    : (period.temperature ? `${period.temperature}°F` : '');
+
+  // Wind summary
+  const windSummary = summary.maxWind > 0
+    ? (summary.maxGust > 0
+        ? `${summary.maxWind} g${summary.maxGust} mph`
+        : `${summary.maxWind} mph`)
+    : '';
+
   return html`
     <div class="period-card ${isSelected ? 'selected' : ''}">
-      <div 
-        class="period-card-header" 
+      <div
+        class="period-card-header"
         onClick=${() => {
           onToggle();
           if (onSelect) onSelect();
         }}
       >
         <div class="period-header-left">
-          ${period.icon ? html`
-            <img src=${period.icon} alt="" class="period-weather-icon" />
-          ` : html`
-            <img src="./images/sun.svg" alt="" class="period-weather-icon" />
-          `}
+          <div class="period-icon-wrap">
+            ${period.icon ? html`
+              <img src=${period.icon} alt="" class="period-weather-icon status-ring-${status}" />
+            ` : html`
+              <img src="./images/sun.svg" alt="" class="period-weather-icon status-ring-${status}" />
+            `}
+          </div>
           <div class="period-title-wrap">
             <span class="period-name">${period.name}</span>
-            <span class="period-subline">${formattedDate} • ${period.shortForecast || `${period.temperature}°F`}</span>
+            <span class="period-subline">
+              ${formattedDate}
+              ${tempRange ? html` • ${tempRange}` : ''}
+              ${windSummary ? html` • 💨 ${windSummary}` : ''}
+            </span>
           </div>
         </div>
 
         <div class="period-header-right">
-          <span class="status-badge ${status}">
-            ${statusUpper}
-          </span>
-
-          ${reasons.length > 0 ? html`
-            <div class="period-chips-wrap" style="display: flex; gap: 0.25rem;">
-              ${reasons.slice(0, 2).map(r => html`
-                <span class="chip chip-${status}">${r}</span>
-              `)}
-            </div>
-          ` : null}
-
-          <svg 
-            class="period-chevron ${isExpanded ? 'open' : ''}" 
-            viewBox="0 0 24 24" 
-            fill="none" 
-            stroke="currentColor" 
+          <svg
+            class="period-chevron ${isExpanded ? 'open' : ''}"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
             stroke-width="2"
           >
             <polyline points="6 9 12 15 18 9"></polyline>
@@ -61,6 +69,19 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
 
       ${isExpanded ? html`
         <div class="period-card-body">
+          ${reasons.length > 0 ? html`
+            <div class="period-reasons-wrap">
+              <span class="period-reasons-label">Commute factors:</span>
+              ${reasons.map(r => html`
+                <span class="chip chip-${status}">${r}</span>
+              `)}
+            </div>
+          ` : html`
+            <div class="period-reasons-wrap">
+              <span class="chip">Favorable Conditions</span>
+            </div>
+          `}
+
           ${period.detailedForecast ? html`
             <p class="period-narrative">${period.detailedForecast}</p>
           ` : null}

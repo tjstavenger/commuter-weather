@@ -18,12 +18,12 @@ export function HourlyView({ hours, options }) {
         <thead>
           <tr>
             <th>Time</th>
-            <th>Commute</th>
-            <th>Conditions</th>
             <th>Temp</th>
             <th>Feels</th>
             <th>Rain</th>
             <th>Wind</th>
+            <th>Gust</th>
+            <th>Reasons</th>
           </tr>
         </thead>
         <tbody>
@@ -44,24 +44,17 @@ export function HourlyView({ hours, options }) {
                   ${isMorning ? html`<span class="hourly-commute-tag">AM</span>` : ''}
                   ${isAfternoon ? html`<span class="hourly-commute-tag">PM</span>` : ''}
                 </td>
-                <td>
-                  <span class="status-badge ${status}" style="font-size: 0.7rem; padding: 0.15rem 0.45rem;">
-                    ${status.toUpperCase()}
-                  </span>
-                  ${reasons.length > 0 ? html`
-                    <span class="chip chip-${status}" style="font-size: 0.65rem; margin-left: 0.35rem;">
-                      ${reasons[0]}
-                    </span>
-                  ` : ''}
-                </td>
-                <td style="display: flex; align-items: center; gap: 0.35rem;">
-                  ${h.icon ? html`<img src=${h.icon} alt="" style="width: 24px; height: 24px; border-radius: 4px;" />` : ''}
-                  <span>${h.shortForecast}</span>
-                </td>
                 <td><strong>${h.temperature}°</strong></td>
                 <td>${h.evaluation?.apparentTemp || h.temperature}°</td>
                 <td>${h.pop}%</td>
-                <td>${h.windDirection} ${h.windSpeed} mph ${h.gustSpeed > 0 ? html`(${h.gustSpeed}g)` : ''}</td>
+                <td>${h.windDirection} ${h.windSpeed}</td>
+                <td>${h.gustSpeed > 0 ? html`<span class="gust-val">${h.gustSpeed}</span>` : '—'}</td>
+                <td>
+                  ${reasons.length > 0
+                    ? reasons.map(r => html`<span class="chip chip-${status} chip-xs">${r}</span>`)
+                    : html`<span class="hourly-ok">✓</span>`
+                  }
+                </td>
               </tr>
             `;
           })}
