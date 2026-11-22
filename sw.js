@@ -3,7 +3,7 @@
  * Provides offline caching for application assets and the most recent forecast data.
  */
 
-const CACHE_NAME = 'commuter-weather-v2';
+const CACHE_NAME = 'commuter-weather-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',

@@ -4,10 +4,10 @@ import { STATUS } from '../decisionEngine.js';
 
 const html = htm.bind(h);
 
-export function CommuteHero({ nextCommute }) {
-  if (!nextCommute) return null;
+export function CommuteHero({ currentConditions, timeZone }) {
+  if (!currentConditions) return null;
 
-  const { title, timeWindow, status, reasons, metrics } = nextCommute;
+  const { status, reasons, metrics } = currentConditions;
 
   const imageMap = {
     [STATUS.RIDE]: './images/ride.png',
@@ -15,18 +15,20 @@ export function CommuteHero({ nextCommute }) {
     [STATUS.DRIVE]: './images/drive.png'
   };
 
-  // Temp display: show range if min != max, otherwise single value
-  const tempDisplay = metrics
-    ? (metrics.minTemp !== null && metrics.maxTemp !== null && metrics.minTemp !== metrics.maxTemp)
-      ? `${metrics.minTemp}–${metrics.maxTemp}°`
-      : `${metrics.minTemp ?? metrics.maxTemp}°`
-    : null;
+  const timeFormatter = new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric',
+    minute: '2-digit',
+    timeZone
+  });
+  const observationLabel = currentConditions.observedAt
+    ? `Observed ${timeFormatter.format(currentConditions.observedAt)}${currentConditions.stationName ? ` at ${currentConditions.stationName}` : ''}`
+    : `Forecast for ${timeFormatter.format(currentConditions.startTime)}`;
 
   return html`
     <div class="hero-card">
       <div class="hero-title-row">
-        <span class="hero-title">Upcoming Commute: ${title}</span>
-        <span class="hero-time">${timeWindow}</span>
+        <span class="hero-title">Current Conditions</span>
+        <span class="hero-time">${observationLabel}</span>
       </div>
 
       <div class="hero-status-row">
@@ -35,12 +37,16 @@ export function CommuteHero({ nextCommute }) {
           alt=${status.toUpperCase()}
           class="hero-status-img hero-status-ring-${status}"
         />
+        <div class="hero-condition-summary">
+          <span class="status-badge ${status}">${status.toUpperCase()}</span>
+          ${currentConditions.description ? html`<span>${currentConditions.description}</span>` : null}
+        </div>
 
         ${metrics ? html`
           <div class="hero-summary-metrics">
-            <div class="metric-item" title="Temperature Range">
+            <div class="metric-item" title="Current Temperature">
               <img src="./images/temp.svg" alt="Temp" />
-              <span><strong>${tempDisplay}</strong> F</span>
+              <span><strong>${metrics.temperature}°</strong> F</span>
             </div>
             <div class="metric-item" title="Apparent Temperature">
               <img src="./images/windChill.svg" alt="Apparent" />
@@ -48,15 +54,32 @@ export function CommuteHero({ nextCommute }) {
             </div>
             <div class="metric-item" title="Chance of Precipitation">
               <img src="./images/precip.svg" alt="Precipitation" />
-              <span><strong>${metrics.pop}%</strong> rain</span>
+              <span>
+                ${metrics.precipitationLastHour !== null
+                  ? html`<strong>${metrics.precipitationLastHour} in</strong> past hour · `
+                  : ''}
+                <strong>${metrics.pop}%</strong> precip chance
+              </span>
             </div>
             <div class="metric-item" title="Sustained Wind / Gust">
               <img src="./images/wind.svg" alt="Wind" />
               <span>
-                <strong>${metrics.wind}</strong>mph
-                ${metrics.gust > 0 ? html` g<strong>${metrics.gust}</strong>` : ''}
+                <strong>${metrics.wind}</strong> mph ${currentConditions.windDirection}
+                ${metrics.gust > 0 ? html` · gusts <strong>${metrics.gust}</strong> mph` : ''}
               </span>
             </div>
+            ${metrics.relativeHumidity !== null ? html`
+              <div class="metric-item" title="Relative Humidity">
+                <img src="./images/humidity.svg" alt="Humidity" />
+                <span><strong>${metrics.relativeHumidity}%</strong> humidity</span>
+              </div>
+            ` : null}
+            ${metrics.visibility !== null ? html`
+              <div class="metric-item" title="Visibility">
+                <img src="./images/visibility.svg" alt="Visibility" />
+                <span><strong>${metrics.visibility}</strong> mi visibility</span>
+              </div>
+            ` : null}
           </div>
         ` : null}
       </div>

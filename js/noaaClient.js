@@ -57,6 +57,75 @@ export function parseHourlyPeriod(raw) {
   };
 }
 
+function observationValue(observation) {
+  const value = observation?.value;
+  return typeof value === 'number' && Number.isFinite(value) ? value : null;
+}
+
+function toTemperatureF(value, unitCode) {
+  if (value === null) return null;
+  return unitCode?.includes('degF') ? Math.round(value) : Math.round(value * 9 / 5 + 32);
+}
+
+function toWindMph(value, unitCode) {
+  if (value === null) return null;
+  if (unitCode?.includes('km_h-1')) return Math.round(value * 0.621371);
+  if (unitCode?.includes('mi_h-1')) return Math.round(value);
+  return Math.round(value * 2.23694);
+}
+
+function toInches(value, unitCode) {
+  if (value === null) return null;
+  if (unitCode?.includes(':mm')) return Number((value / 25.4).toFixed(2));
+  if (unitCode?.includes(':in')) return Number(value.toFixed(2));
+  return Number((value * 39.3701).toFixed(2));
+}
+
+function toMiles(value, unitCode) {
+  if (value === null) return null;
+  if (unitCode?.includes(':mi')) return Number(value.toFixed(1));
+  if (unitCode?.includes(':km')) return Number((value * 0.621371).toFixed(1));
+  return Number((value / 1609.34).toFixed(1));
+}
+
+function degreesToDirection(degrees) {
+  if (degrees === null) return '';
+  return ['N', 'NNE', 'NE', 'ENE', 'E', 'ESE', 'SE', 'SSE', 'S', 'SSW', 'SW', 'WSW', 'W', 'WNW', 'NW', 'NNW'][
+    Math.round(degrees / 22.5) % 16
+  ];
+}
+
+/**
+ * Normalizes the latest observation from a NOAA weather station.
+ * @param {object} raw Raw observation response from /observations/latest
+ * @param {object} station NOAA station feature
+ * @returns {object|null} Current conditions
+ */
+export function parseCurrentObservation(raw, station = {}) {
+  const properties = raw?.properties;
+  if (!properties) return null;
+
+  const temperature = properties.temperature;
+  const windSpeed = properties.windSpeed;
+  const windGust = properties.windGust;
+  const precipitation = properties.precipitationLastHour;
+  const visibility = properties.visibility;
+
+  return {
+    stationName: station.properties?.name || '',
+    timestamp: properties.timestamp ? new Date(properties.timestamp) : null,
+    description: properties.textDescription || '',
+    temperature: toTemperatureF(observationValue(temperature), temperature?.unitCode),
+    windSpeed: toWindMph(observationValue(windSpeed), windSpeed?.unitCode),
+    windGust: toWindMph(observationValue(windGust), windGust?.unitCode),
+    windDirection: degreesToDirection(observationValue(properties.windDirection)),
+    relativeHumidity: observationValue(properties.relativeHumidity),
+    dewpoint: toTemperatureF(observationValue(properties.dewpoint), properties.dewpoint?.unitCode),
+    precipitationLastHour: toInches(observationValue(precipitation), precipitation?.unitCode),
+    visibility: toMiles(observationValue(visibility), visibility?.unitCode)
+  };
+}
+
 /**
  * Normalizes an individual 12-hour period GeoJSON object from NOAA
  * @param {object} raw Raw period from properties.periods
@@ -154,6 +223,7 @@ export class NoaaClient {
       gridY: props.gridY,
       forecastUrl: props.forecast,
       forecastHourlyUrl: props.forecastHourly,
+      observationStationsUrl: props.observationStations,
       timeZone: props.timeZone || 'UTC',
       city: props.relativeLocation?.properties?.city || 'Unknown',
       state: props.relativeLocation?.properties?.state || ''
@@ -204,7 +274,29 @@ export class NoaaClient {
   }
 
   /**
-   * Unified master method: resolves coordinates and fetches hourly, daily, and alerts in parallel.
+   * Fetches the latest observation from the nearest NOAA station.
+   * @param {string} observationStationsUrl URL from point metadata
+   * @returns {Promise<object|null>} Current observation, or null when unavailable
+   */
+  async getCurrentObservation(observationStationsUrl) {
+    if (!observationStationsUrl) return null;
+
+    try {
+      const stations = await this._request(observationStationsUrl);
+      const station = stations.features?.[0];
+      if (!station?.id) return null;
+
+      const stationUrl = station.id.endsWith('/') ? station.id : `${station.id}/`;
+      const latest = await this._request(new URL('observations/latest', stationUrl).toString());
+      return parseCurrentObservation(latest, station);
+    } catch (err) {
+      console.warn('Could not fetch current weather observations from NOAA:', err.message);
+      return null;
+    }
+  }
+
+  /**
+   * Unified master method: resolves coordinates and fetches forecasts, observations, and alerts.
    * @param {number} lat
    * @param {number} lon
    * @returns {Promise<object>} Complete forecast data package
@@ -212,10 +304,11 @@ export class NoaaClient {
   async fetchForecast(lat, lon) {
     const point = await this.getPointMetadata(lat, lon);
 
-    // Fetch hourly, daily, and alerts concurrently
-    const [hourly, daily, alerts] = await Promise.all([
+    // Fetch hourly, daily, current observations, and alerts concurrently
+    const [hourly, daily, currentConditions, alerts] = await Promise.all([
       this.getHourlyForecast(point.forecastHourlyUrl),
       this.getDailyForecast(point.forecastUrl),
+      this.getCurrentObservation(point.observationStationsUrl),
       this.getActiveAlerts(lat, lon)
     ]);
 
@@ -223,6 +316,7 @@ export class NoaaClient {
       point,
       hourly,
       daily,
+      currentConditions,
       alerts,
       updatedAt: new Date()
     };

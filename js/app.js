@@ -3,7 +3,7 @@ import { useState, useEffect, useCallback, useMemo } from 'preact/hooks';
 import htm from 'htm';
 
 import { noaaClient } from './noaaClient.js';
-import { evaluatePeriod, evaluateHour, isWeekday, isTimeInWindow, STATUS } from './decisionEngine.js';
+import { evaluatePeriod, evaluateHour } from './decisionEngine.js';
 import { getSunriseSunset } from './solar.js';
 import { loadSettings, saveSettings } from './settingsService.js';
 
@@ -65,85 +65,50 @@ export function App() {
     });
   }, [forecastData, settings]);
 
-  // Compute next commute for the hero banner
-  const nextCommute = useMemo(() => {
-    if (!forecastData?.hourly || evaluatedPeriods.length === 0) return null;
-
+  // Evaluate the latest observed conditions, using the active hourly forecast for precipitation chance.
+  const currentConditions = useMemo(() => {
+    if (!forecastData?.hourly?.length) return null;
     const now = new Date();
-    const morning = settings.morningCommute || { enabled: true, start: '05:30', end: '06:30' };
-    const afternoon = settings.afternoonCommute || { enabled: true, start: '15:00', end: '16:00' };
+    const hourly = forecastData.hourly;
+    const currentHour = hourly.find(hour => hour.startTime <= now && hour.endTime > now)
+      || hourly.find(hour => hour.startTime > now)
+      || hourly[hourly.length - 1];
+    const observation = forecastData.currentConditions;
+    const conditions = {
+      ...currentHour,
+      temperature: observation?.temperature ?? currentHour.temperature,
+      windSpeed: observation?.windSpeed ?? currentHour.windSpeed,
+      gustSpeed: observation?.windGust ?? currentHour.gustSpeed,
+      windDirection: observation?.windDirection || currentHour.windDirection,
+      relativeHumidity: observation?.relativeHumidity ?? currentHour.relativeHumidity,
+      pop: currentHour.pop,
+      startTime: observation?.timestamp || now,
+      description: observation?.description || currentHour.shortForecast,
+      precipitationLastHour: observation?.precipitationLastHour ?? null,
+      visibility: observation?.visibility ?? null,
+      stationName: observation?.stationName || ''
+    };
+    const sun = getSunriseSunset(conditions.startTime, settings.location.lat, settings.location.lon);
+    const evaluation = evaluateHour(conditions, settings, sun);
 
-    // Find upcoming commute window
-    for (const period of evaluatedPeriods) {
-      if (!isWeekday(period.startTime)) continue;
-
-      const morningHours = period.commuteHours?.morning || [];
-      const afternoonHours = period.commuteHours?.afternoon || [];
-
-      // Check if morning commute is in the future
-      if (morning.enabled && morningHours.length > 0 && morningHours[morningHours.length - 1].endTime > now) {
-        return buildCommuteSummary('Morning Commute', `${morning.start} – ${morning.end}`, morningHours);
-      }
-
-      // Check if afternoon commute is in the future
-      if (afternoon.enabled && afternoonHours.length > 0 && afternoonHours[afternoonHours.length - 1].endTime > now) {
-        return buildCommuteSummary('Afternoon Commute', `${afternoon.start} – ${afternoon.end}`, afternoonHours);
-      }
-    }
-
-    // Default: use the first available daytime commute window in forecast
-    for (const period of evaluatedPeriods) {
-      if (period.commuteHours?.morning?.length > 0) {
-        return buildCommuteSummary(`${period.name} Morning`, `${morning.start} – ${morning.end}`, period.commuteHours.morning);
-      }
-    }
-
-    return null;
-  }, [forecastData, evaluatedPeriods, settings]);
-
-  function buildCommuteSummary(title, timeWindow, commuteHours) {
-    if (!commuteHours || commuteHours.length === 0) return null;
-
-    let worstStatus = STATUS.RIDE;
-    const allReasons = [];
-    let minTemp = Infinity;
-    let maxTemp = -Infinity;
-    let sumApparent = 0;
-    let maxWind = 0;
-    let maxGust = 0;
-    let maxPop = 0;
-
-    for (const h of commuteHours) {
-      if (h.evaluation.status === STATUS.DRIVE) {
-        worstStatus = STATUS.DRIVE;
-      } else if (h.evaluation.status === STATUS.CAUTION && worstStatus !== STATUS.DRIVE) {
-        worstStatus = STATUS.CAUTION;
-      }
-      allReasons.push(...h.evaluation.reasons);
-      if (h.temperature < minTemp) minTemp = h.temperature;
-      if (h.temperature > maxTemp) maxTemp = h.temperature;
-      sumApparent += (h.evaluation.apparentTemp || h.temperature);
-      if (h.windSpeed > maxWind) maxWind = h.windSpeed;
-      if ((h.gustSpeed || 0) > maxGust) maxGust = h.gustSpeed || 0;
-      if (h.pop > maxPop) maxPop = h.pop;
-    }
-
-    const count = commuteHours.length;
     return {
-      title,
-      timeWindow,
-      status: worstStatus,
-      reasons: [...new Set(allReasons)],
+      ...conditions,
+      status: evaluation.status,
+      reasons: evaluation.reasons,
+      apparentTemp: evaluation.apparentTemp,
+      observedAt: observation?.timestamp || null,
       metrics: {
-        minTemp: isFinite(minTemp) ? minTemp : null,
-        maxTemp: isFinite(maxTemp) ? maxTemp : null,
-        apparentTemp: Math.round(sumApparent / count),
-        wind: maxWind,
-        gust: maxGust,
-        pop: maxPop
+        temperature: conditions.temperature,
+        apparentTemp: evaluation.apparentTemp,
+        wind: conditions.windSpeed,
+        gust: conditions.gustSpeed,
+        pop: conditions.pop,
+        relativeHumidity: conditions.relativeHumidity,
+        precipitationLastHour: conditions.precipitationLastHour,
+        visibility: conditions.visibility
       }
     };
-  }
+  }, [forecastData, settings]);
 
   const handleSaveSettings = (newSettings) => {
     saveSettings(newSettings);
@@ -168,9 +133,9 @@ export function App() {
           <${AlertBanner} alerts=${forecastData.alerts} />
         ` : null}
 
-        <!-- Next Commute Hero Outlook -->
-        ${nextCommute ? html`
-          <${CommuteHero} nextCommute=${nextCommute} />
+        <!-- Current Conditions -->
+        ${currentConditions ? html`
+          <${CommuteHero} currentConditions=${currentConditions} timeZone=${forecastData.point?.timeZone} />
         ` : null}
 
         <!-- Error State -->
