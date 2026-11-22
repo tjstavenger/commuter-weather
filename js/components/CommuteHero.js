@@ -24,7 +24,7 @@ export function CommuteHero({ currentConditions, timeZone }) {
         <span class="hero-time">${observationLabel}</span>
       </div>
 
-      <div class="hero-status-row">
+      <div class="hero-condition-row">
         <img
           src=${currentConditions.icon || './images/cloud.svg'}
           alt=${currentConditions.description || 'Current weather conditions'}
@@ -32,58 +32,54 @@ export function CommuteHero({ currentConditions, timeZone }) {
         />
         <div class="hero-condition-summary">
           ${currentConditions.description ? html`<span>${currentConditions.description}</span>` : null}
-        </div>
-
-        ${metrics ? html`
-          <div class="hero-summary-metrics">
-            <div class="metric-item" title="Current Temperature">
-              <img src="./images/temp.svg" alt="Temp" />
-              <span><strong>${metrics.temperature}°</strong> F</span>
-            </div>
-            <div class="metric-item" title="Apparent Temperature">
-              <img src="./images/windChill.svg" alt="Apparent" />
-              <span>Feels <strong>${metrics.apparentTemp}°</strong></span>
-            </div>
-            <div class="metric-item" title="Chance of Precipitation">
-              <img src="./images/precip.svg" alt="Precipitation" />
-              <span>
-                ${metrics.precipitationLastHour !== null
-                  ? html`<strong>${metrics.precipitationLastHour} in</strong> past hour · `
-                  : ''}
-                <strong>${metrics.pop}%</strong> precip chance
-              </span>
-            </div>
-            <div class="metric-item" title="Sustained Wind / Gust">
-              <img src="./images/wind.svg" alt="Wind" />
-              <span>
-                <strong>${metrics.wind}</strong> mph ${currentConditions.windDirection}
-                ${metrics.gust > 0 ? html` · gusts <strong>${metrics.gust}</strong> mph` : ''}
-              </span>
-            </div>
-            ${metrics.relativeHumidity !== null ? html`
-              <div class="metric-item" title="Relative Humidity">
-                <img src="./images/humidity.svg" alt="Humidity" />
-                <span><strong>${metrics.relativeHumidity}%</strong> humidity</span>
-              </div>
-            ` : null}
-            ${metrics.visibility !== null ? html`
-              <div class="metric-item" title="Visibility">
-                <img src="./images/visibility.svg" alt="Visibility" />
-                <span><strong>${metrics.visibility}</strong> mi visibility</span>
-              </div>
-            ` : null}
+          <div class="hero-chips-wrap">
+            ${reasons && reasons.length > 0
+              ? reasons.map(r => html`<span class="chip chip-${status}">${r}</span>`)
+              : html`<span class="chip">Favorable Conditions</span>`
+            }
           </div>
-        ` : null}
+        </div>
       </div>
 
-      ${reasons && reasons.length > 0 ? html`
-        <div class="hero-chips-wrap">
-          ${reasons.map(r => html`
-            <span class="chip chip-${status}">${r}</span>
-          `)}
+      ${metrics ? html`
+        <div class="hero-summary-metrics">
+          <div class="metric-item" title="Current Temperature">
+            <img src="./images/temp.svg" alt="Temp" />
+            <span><strong>${metrics.temperature}°</strong> F</span>
+          </div>
+          <div class="metric-item" title="Apparent Temperature">
+            <img src="./images/windChill.svg" alt="Apparent" />
+            <span>Feels <strong>${metrics.apparentTemp}°</strong></span>
+          </div>
+          <div class="metric-item" title="Chance of Precipitation">
+            <img src="./images/precip.svg" alt="Precipitation" />
+            <span>
+              ${metrics.precipitationLastHour !== null
+                ? html`<strong>${metrics.precipitationLastHour} in</strong> past hour · `
+                : ''}
+              <strong>${metrics.pop}%</strong> precip chance
+            </span>
+          </div>
+          <div class="metric-item" title="Sustained Wind / Gust">
+            <img src="./images/wind.svg" alt="Wind" />
+            <span>
+              <strong>${metrics.wind}</strong> mph ${currentConditions.windDirection}
+              ${metrics.gust > 0 ? html` · gusts <strong>${metrics.gust}</strong> mph` : ''}
+            </span>
+          </div>
+          ${metrics.relativeHumidity !== null ? html`
+            <div class="metric-item" title="Relative Humidity">
+              <img src="./images/humidity.svg" alt="Humidity" />
+              <span><strong>${metrics.relativeHumidity}%</strong> humidity</span>
+            </div>
+          ` : null}
+          ${metrics.visibility !== null ? html`
+            <div class="metric-item" title="Visibility">
+              <img src="./images/visibility.svg" alt="Visibility" />
+              <span><strong>${metrics.visibility}</strong> mi visibility</span>
+            </div>
+          ` : null}
         </div>
-      ` : html`
-        <span class="chip">Favorable Conditions</span>
       `}
     </div>
   `;
