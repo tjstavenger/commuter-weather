@@ -110,6 +110,7 @@ export function parseCurrentObservation(raw, station = {}) {
   const windGust = properties.windGust;
   const precipitation = properties.precipitationLastHour;
   const visibility = properties.visibility;
+  const humidity = observationValue(properties.relativeHumidity);
 
   return {
     stationName: station.properties?.name || '',
@@ -119,7 +120,7 @@ export function parseCurrentObservation(raw, station = {}) {
     windSpeed: toWindMph(observationValue(windSpeed), windSpeed?.unitCode),
     windGust: toWindMph(observationValue(windGust), windGust?.unitCode),
     windDirection: degreesToDirection(observationValue(properties.windDirection)),
-    relativeHumidity: observationValue(properties.relativeHumidity),
+    relativeHumidity: humidity === null ? null : Math.round(humidity),
     dewpoint: toTemperatureF(observationValue(properties.dewpoint), properties.dewpoint?.unitCode),
     precipitationLastHour: toInches(observationValue(precipitation), precipitation?.unitCode),
     visibility: toMiles(observationValue(visibility), visibility?.unitCode)
