@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import {
   parseWindSpeed,
   parseHourlyPeriod,
+  parseCurrentObservation,
   parseDailyPeriod,
   parseAlert,
   NoaaClient
@@ -82,6 +83,35 @@ test('parseHourlyPeriod handles null or missing NOAA optional fields gracefully'
   assert.equal(parsed.windSpeed, 5);
   assert.equal(parsed.gustSpeed, 0); // null gust defaults to 0
   assert.equal(parsed.gustSpeedRaw, null);
+});
+
+test('parseCurrentObservation converts NOAA station measurements to display units', () => {
+  const parsed = parseCurrentObservation({
+    properties: {
+      timestamp: '2026-11-21T14:00:00+00:00',
+      textDescription: 'Light Rain',
+      temperature: { value: 10, unitCode: 'wmoUnit:degC' },
+      windSpeed: { value: 10, unitCode: 'wmoUnit:m_s-1' },
+      windGust: { value: 15, unitCode: 'wmoUnit:m_s-1' },
+      windDirection: { value: 315, unitCode: 'wmoUnit:degree_(angle)' },
+      relativeHumidity: { value: 80, unitCode: 'wmoUnit:percent' },
+      dewpoint: { value: 5, unitCode: 'wmoUnit:degC' },
+      precipitationLastHour: { value: 2.54, unitCode: 'wmoUnit:mm' },
+      visibility: { value: 1609.34, unitCode: 'wmoUnit:m' }
+    }
+  }, { properties: { name: 'Airport Station' } });
+
+  assert.equal(parsed.stationName, 'Airport Station');
+  assert.equal(parsed.description, 'Light Rain');
+  assert.equal(parsed.temperature, 50);
+  assert.equal(parsed.windSpeed, 22);
+  assert.equal(parsed.windGust, 34);
+  assert.equal(parsed.windDirection, 'NW');
+  assert.equal(parsed.relativeHumidity, 80);
+  assert.equal(parsed.dewpoint, 41);
+  assert.equal(parsed.precipitationLastHour, 0.1);
+  assert.equal(parsed.visibility, 1);
+  assert.ok(parsed.timestamp instanceof Date);
 });
 
 test('parseDailyPeriod normalizes 12-hour period forecast correctly', () => {
@@ -178,6 +208,7 @@ test('NoaaClient.fetchForecast orchestrates point, hourly, daily, and alerts in 
           properties: {
             forecast: 'https://api.weather.gov/gridpoints/PDT/110,75/forecast',
             forecastHourly: 'https://api.weather.gov/gridpoints/PDT/110,75/forecast/hourly',
+            observationStations: 'https://api.weather.gov/gridpoints/PDT/110,75/stations',
             relativeLocation: { properties: { city: 'Richland', state: 'WA' } }
           }
         })
@@ -215,6 +246,28 @@ test('NoaaClient.fetchForecast orchestrates point, hourly, daily, and alerts in 
         })
       };
     }
+    if (url.endsWith('/stations')) {
+      return {
+        ok: true,
+        json: async () => ({
+          features: [
+            { id: 'https://api.weather.gov/stations/KRLD', properties: { name: 'Richland Airport' } }
+          ]
+        })
+      };
+    }
+    if (url.endsWith('/stations/KRLD/observations/latest')) {
+      return {
+        ok: true,
+        json: async () => ({
+          properties: {
+            timestamp: '2026-11-21T14:00:00+00:00',
+            temperature: { value: 10, unitCode: 'wmoUnit:degC' },
+            windSpeed: { value: 5, unitCode: 'wmoUnit:m_s-1' }
+          }
+        })
+      };
+    }
     throw new Error(`Unexpected mock URL: ${url}`);
   };
 
@@ -226,6 +279,9 @@ test('NoaaClient.fetchForecast orchestrates point, hourly, daily, and alerts in 
   assert.equal(result.hourly[0].temperature, 45);
   assert.equal(result.daily.length, 1);
   assert.equal(result.daily[0].name, 'Today');
+  assert.equal(result.currentConditions.stationName, 'Richland Airport');
+  assert.equal(result.currentConditions.temperature, 50);
+  assert.equal(result.currentConditions.windSpeed, 11);
   assert.deepEqual(result.alerts, []);
   assert.ok(result.updatedAt instanceof Date);
 });

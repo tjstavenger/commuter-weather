@@ -256,6 +256,7 @@ body {
 
 .hero-status-row {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 1rem;
 }
@@ -267,6 +268,13 @@ body {
   border-radius: var(--radius-md);
   border: 3px solid transparent;
   flex-shrink: 0;
+}
+
+.hero-condition-summary {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.65rem;
 }
 
 .hero-status-ring-ride    { border-color: var(--ride-border); box-shadow: 0 0 0 1px var(--ride-border); }
