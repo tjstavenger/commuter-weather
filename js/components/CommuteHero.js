@@ -80,7 +80,7 @@ export function CommuteHero({ currentConditions, timeZone }) {
             </div>
           ` : null}
         </div>
-      `}
+      ` : null}
     </div>
   `;
 }
