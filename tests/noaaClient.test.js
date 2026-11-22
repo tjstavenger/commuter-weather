@@ -94,7 +94,7 @@ test('parseCurrentObservation converts NOAA station measurements to display unit
       windSpeed: { value: 10, unitCode: 'wmoUnit:m_s-1' },
       windGust: { value: 15, unitCode: 'wmoUnit:m_s-1' },
       windDirection: { value: 315, unitCode: 'wmoUnit:degree_(angle)' },
-      relativeHumidity: { value: 80, unitCode: 'wmoUnit:percent' },
+      relativeHumidity: { value: 86.803362953546, unitCode: 'wmoUnit:percent' },
       dewpoint: { value: 5, unitCode: 'wmoUnit:degC' },
       precipitationLastHour: { value: 2.54, unitCode: 'wmoUnit:mm' },
       visibility: { value: 1609.34, unitCode: 'wmoUnit:m' }
@@ -107,7 +107,7 @@ test('parseCurrentObservation converts NOAA station measurements to display unit
   assert.equal(parsed.windSpeed, 22);
   assert.equal(parsed.windGust, 34);
   assert.equal(parsed.windDirection, 'NW');
-  assert.equal(parsed.relativeHumidity, 80);
+  assert.equal(parsed.relativeHumidity, 87);
   assert.equal(parsed.dewpoint, 41);
   assert.equal(parsed.precipitationLastHour, 0.1);
   assert.equal(parsed.visibility, 1);
