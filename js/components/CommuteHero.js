@@ -1,6 +1,5 @@
 import { h } from 'preact';
 import htm from 'htm';
-import { STATUS } from '../decisionEngine.js';
 
 const html = htm.bind(h);
 
@@ -8,12 +7,6 @@ export function CommuteHero({ currentConditions, timeZone }) {
   if (!currentConditions) return null;
 
   const { status, reasons, metrics } = currentConditions;
-
-  const imageMap = {
-    [STATUS.RIDE]: './images/ride.png',
-    [STATUS.CAUTION]: './images/caution.png',
-    [STATUS.DRIVE]: './images/drive.png'
-  };
 
   const timeFormatter = new Intl.DateTimeFormat(undefined, {
     hour: 'numeric',
@@ -33,12 +26,11 @@ export function CommuteHero({ currentConditions, timeZone }) {
 
       <div class="hero-status-row">
         <img
-          src=${imageMap[status] || './images/ride.png'}
-          alt=${status.toUpperCase()}
-          class="hero-status-img hero-status-ring-${status}"
+          src=${currentConditions.icon || './images/cloud.svg'}
+          alt=${currentConditions.description || 'Current weather conditions'}
+          class="period-weather-icon status-ring-${status}"
         />
         <div class="hero-condition-summary">
-          <span class="status-badge ${status}">${status.toUpperCase()}</span>
           ${currentConditions.description ? html`<span>${currentConditions.description}</span>` : null}
         </div>
 

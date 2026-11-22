@@ -261,25 +261,12 @@ body {
   gap: 1rem;
 }
 
-/* Colored ring on the status image — replaces the big DRIVE/RIDE/CAUTION text */
-.hero-status-img {
-  width: 60px;
-  height: 60px;
-  border-radius: var(--radius-md);
-  border: 3px solid transparent;
-  flex-shrink: 0;
-}
-
 .hero-condition-summary {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
   gap: 0.65rem;
 }
-
-.hero-status-ring-ride    { border-color: var(--ride-border); box-shadow: 0 0 0 1px var(--ride-border); }
-.hero-status-ring-caution { border-color: var(--caution-border); box-shadow: 0 0 0 1px var(--caution-border); }
-.hero-status-ring-drive   { border-color: var(--drive-border); box-shadow: 0 0 0 1px var(--drive-border); }
 
 .hero-chips-wrap {
   display: flex;
