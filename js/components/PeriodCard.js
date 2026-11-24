@@ -53,15 +53,24 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
             <table class="period-summary-table" aria-label="${period.name} weather summary">
               <tbody>
                 <tr>
-                  <th scope="row">Temp</th>
+                  <th scope="row" aria-label="Temperature" title="Temperature">
+                    <img src="./images/temp.svg" alt="" aria-hidden="true" class="period-summary-icon" />
+                  </th>
                   <td>${tempRange || '—'}</td>
-                  <th scope="row">Wind/gust</th>
+                  <th scope="row" aria-label="Wind and gust" title="Wind and gust">
+                    <img src="./images/wind.svg" alt="" aria-hidden="true" class="period-summary-icon" />
+                    <img src="./images/gust.svg" alt="" aria-hidden="true" class="period-summary-icon" />
+                  </th>
                   <td>${windSummary || '—'}</td>
                 </tr>
                 <tr>
-                  <th scope="row">Max precip</th>
+                  <th scope="row" aria-label="Maximum precipitation chance" title="Maximum precipitation chance">
+                    <img src="./images/precip.svg" alt="" aria-hidden="true" class="period-summary-icon" />
+                  </th>
                   <td>${maxPop}</td>
-                  <th scope="row">Max humidity</th>
+                  <th scope="row" aria-label="Maximum humidity" title="Maximum humidity">
+                    <img src="./images/humidity.svg" alt="" aria-hidden="true" class="period-summary-icon" />
+                  </th>
                   <td>${maxHumidity}</td>
                 </tr>
               </tbody>

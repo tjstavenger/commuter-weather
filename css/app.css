@@ -470,6 +470,24 @@ body {
   padding-left: 0.5rem;
 }
 
+.period-summary-icon {
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.period-summary-icon + .period-summary-icon {
+  margin-left: 0.1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  .period-summary-icon {
+    filter: invert(1);
+  }
+}
+
 .period-header-right {
   display: flex;
   align-items: center;
