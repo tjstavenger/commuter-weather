@@ -9,6 +9,7 @@ Live App: [https://tjstavenger.github.io/commuter-weather/](https://tjstavenger.
 ## Features
 
 * **Direct NOAA NWS Web Service Integration**: Communicates directly with the official [api.weather.gov](https://www.weather.gov/documentation/services-web-api) REST API using native CORS support—no third-party CORS proxies required.
+* **Expandable NWS Weather Alerts**: Click an active warning or advisory to view its description, instructions, severity, and timing.
 * **Bicycle Commute Decision Engine**:
   * Evaluates each hour of the forecast and summarizes each day against your commute windows and thresholds.
   * Default Work-Week Commute Windows: **05:30 – 06:30** (Morning) and **15:00 – 16:00** (Afternoon).
