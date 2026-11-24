@@ -21,10 +21,11 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
     : (period.temperature ? `${period.temperature}°F` : '');
 
   // Wind summary
-  const windSummary = summary.maxWind > 0
-    ? (summary.maxGust > 0
-        ? `${summary.maxWind} g${summary.maxGust} mph`
-        : `${summary.maxWind} mph`)
+  const windSummary = summary.maxWind > 0 || summary.maxGust > 0
+    ? [
+        summary.maxWind > 0 ? `${summary.maxWind} mph` : '',
+        summary.maxGust > 0 ? `gusts ${summary.maxGust} mph` : ''
+      ].filter(Boolean).join(', ')
     : '';
 
   return html`

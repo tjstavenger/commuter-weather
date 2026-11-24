@@ -8,7 +8,7 @@ Live App: [https://tjstavenger.github.io/commuter-weather/](https://tjstavenger.
 
 ## Features
 
-* **Direct NOAA NWS Web Service Integration**: Communicates directly with the official [api.weather.gov](https://www.weather.gov/documentation/services-web-api) REST API using native CORS support—no third-party CORS proxies required.
+* **Direct NOAA NWS Web Service Integration**: Communicates directly with the official [api.weather.gov](https://www.weather.gov/documentation/services-web-api) REST API using native CORS support—no third-party CORS proxies required. Hourly wind gusts are sourced from the NWS gridpoint forecast.
 * **Expandable NWS Weather Alerts**: Click an active warning or advisory to view its description, instructions, severity, and timing.
 * **Bicycle Commute Decision Engine**:
   * Evaluates each hour of the forecast and summarizes each day against your commute windows and thresholds.
