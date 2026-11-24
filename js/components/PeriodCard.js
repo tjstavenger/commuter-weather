@@ -23,9 +23,11 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
   // Wind summary
   const windSummary = summary.maxWind > 0 || summary.maxGust > 0
     ? [
-        summary.maxWind > 0 ? `${summary.maxWind} mph` : '',
-        summary.maxGust > 0 ? `gusts ${summary.maxGust} mph` : ''
-      ].filter(Boolean).join(', ')
+        summary.maxWind > 0
+          ? `${summary.maxWind} mph${summary.maxWindDirection ? ` ${summary.maxWindDirection}` : ''}`
+          : '',
+        summary.maxGust > 0 ? `${summary.maxGust} mph` : ''
+      ].filter(Boolean).join(' · ')
     : '';
   const maxPop = Number.isFinite(summary.maxPop) ? `${summary.maxPop}%` : '—';
   const maxHumidity = Number.isFinite(summary.maxHumidity) ? `${summary.maxHumidity}%` : '—';
