@@ -174,3 +174,21 @@ test('evaluatePeriod flags CAUTION when midday weather is bad but commute hours 
   assert.equal(result.status, STATUS.CAUTION);
   assert.ok(result.reasons.includes('Rain 70%'));
 });
+
+test('evaluatePeriod summarizes repeated triggers using the most severe value', () => {
+  const period = {
+    name: 'Tonight',
+    isDaytime: false,
+    startTime: new Date('2026-11-23T18:00:00'),
+    endTime: new Date('2026-11-23T20:00:00')
+  };
+  const hours = [
+    { startTime: new Date('2026-11-23T18:00:00'), temperature: 50, windSpeed: 5, gustSpeed: 0, pop: 99 },
+    { startTime: new Date('2026-11-23T19:00:00'), temperature: 50, windSpeed: 5, gustSpeed: 0, pop: 92 }
+  ];
+
+  const result = evaluatePeriod(period, hours, DEFAULT_SETTINGS, {});
+
+  assert.equal(result.status, STATUS.DRIVE);
+  assert.deepEqual(result.reasons, ['Rain 99%']);
+});
