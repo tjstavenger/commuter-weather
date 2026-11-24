@@ -74,6 +74,43 @@ function toWindMph(value, unitCode) {
   return Math.round(value * 2.23694);
 }
 
+function parseDurationMilliseconds(duration) {
+  const match = /^P(?:(\d+(?:\.\d+)?)D)?(?:T(?:(\d+(?:\.\d+)?)H)?(?:(\d+(?:\.\d+)?)M)?(?:(\d+(?:\.\d+)?)S)?)?$/.exec(duration);
+  if (!match) return 0;
+
+  const days = Number(match[1] || 0);
+  const hours = Number(match[2] || 0);
+  const minutes = Number(match[3] || 0);
+  const seconds = Number(match[4] || 0);
+  return (days * 86400 + hours * 3600 + minutes * 60 + seconds) * 1000;
+}
+
+/**
+ * Parses NWS gridpoint wind gust intervals into hourly-forecast-ready values.
+ * @param {object} raw Raw response from /gridpoints/{office}/{gridX},{gridY}
+ * @returns {Array<{startTime: Date, endTime: Date, gustSpeed: number}>}
+ */
+export function parseWindGustForecast(raw) {
+  const forecast = raw?.properties?.windGust || raw?.properties;
+  const unitCode = forecast?.uom;
+  const values = forecast?.values || [];
+
+  return values.flatMap(({ validTime, value }) => {
+    if (typeof value !== 'number' || !Number.isFinite(value) || typeof validTime !== 'string') return [];
+
+    const [start, duration] = validTime.split('/');
+    const startTime = new Date(start);
+    const durationMs = parseDurationMilliseconds(duration || '');
+    if (!Number.isFinite(startTime.getTime()) || durationMs <= 0) return [];
+
+    return [{
+      startTime,
+      endTime: new Date(startTime.getTime() + durationMs),
+      gustSpeed: toWindMph(value, unitCode)
+    }];
+  });
+}
+
 function toInches(value, unitCode) {
   if (value === null) return null;
   if (unitCode?.includes(':mm')) return Number((value / 25.4).toFixed(2));
@@ -243,6 +280,23 @@ export class NoaaClient {
   }
 
   /**
+   * Fetches wind gust intervals from the NWS gridpoint forecast.
+   * @param {object} point NOAA point metadata
+   * @returns {Promise<Array<object>>} Normalized wind gust intervals
+   */
+  async getWindGustForecast(point) {
+    const url = `${this.baseUrl}/gridpoints/${point.gridId}/${point.gridX},${point.gridY}`;
+
+    try {
+      const data = await this._request(url);
+      return parseWindGustForecast(data);
+    } catch (err) {
+      console.warn('Could not fetch wind gust forecast from NOAA:', err.message);
+      return [];
+    }
+  }
+
+  /**
    * Fetches the 12-hour period forecast (e.g. Today, Tonight, Monday...)
    * @param {string} forecastUrl
    * @returns {Promise<Array<object>>} Normalized daily periods
@@ -306,16 +360,23 @@ export class NoaaClient {
     const point = await this.getPointMetadata(lat, lon);
 
     // Fetch hourly, daily, current observations, and alerts concurrently
-    const [hourly, daily, currentConditions, alerts] = await Promise.all([
+    const [hourly, daily, currentConditions, alerts, windGusts] = await Promise.all([
       this.getHourlyForecast(point.forecastHourlyUrl),
       this.getDailyForecast(point.forecastUrl),
       this.getCurrentObservation(point.observationStationsUrl),
-      this.getActiveAlerts(lat, lon)
+      this.getActiveAlerts(lat, lon),
+      this.getWindGustForecast(point)
     ]);
+
+    const hourlyWithGusts = hourly.map(period => {
+      if (period.gustSpeed > 0) return period;
+      const gust = windGusts.find(item => period.startTime >= item.startTime && period.startTime < item.endTime);
+      return gust ? { ...period, gustSpeed: gust.gustSpeed } : period;
+    });
 
     return {
       point,
-      hourly,
+      hourly: hourlyWithGusts,
       daily,
       currentConditions,
       alerts,

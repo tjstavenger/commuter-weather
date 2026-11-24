@@ -206,10 +206,28 @@ test('NoaaClient.fetchForecast orchestrates point, hourly, daily, and alerts in 
         ok: true,
         json: async () => ({
           properties: {
+            gridId: 'PDT',
+            gridX: 110,
+            gridY: 75,
             forecast: 'https://api.weather.gov/gridpoints/PDT/110,75/forecast',
             forecastHourly: 'https://api.weather.gov/gridpoints/PDT/110,75/forecast/hourly',
             observationStations: 'https://api.weather.gov/gridpoints/PDT/110,75/stations',
             relativeLocation: { properties: { city: 'Richland', state: 'WA' } }
+          }
+        })
+      };
+    }
+    if (url.endsWith('/gridpoints/PDT/110,75')) {
+      return {
+        ok: true,
+        json: async () => ({
+          properties: {
+            windGust: {
+              uom: 'wmoUnit:km_h-1',
+              values: [
+                { validTime: '2026-11-21T04:00:00Z/PT3H', value: 44.8 }
+              ]
+            }
           }
         })
       };
@@ -277,6 +295,7 @@ test('NoaaClient.fetchForecast orchestrates point, hourly, daily, and alerts in 
   assert.equal(result.point.city, 'Richland');
   assert.equal(result.hourly.length, 1);
   assert.equal(result.hourly[0].temperature, 45);
+  assert.equal(result.hourly[0].gustSpeed, 28);
   assert.equal(result.daily.length, 1);
   assert.equal(result.daily[0].name, 'Today');
   assert.equal(result.currentConditions.stationName, 'Richland Airport');
