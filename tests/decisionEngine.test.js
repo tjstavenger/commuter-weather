@@ -192,3 +192,36 @@ test('evaluatePeriod summarizes repeated triggers using the most severe value', 
   assert.equal(result.status, STATUS.DRIVE);
   assert.deepEqual(result.reasons, ['Rain 99%']);
 });
+
+test('evaluatePeriod reports maximum precipitation chance and humidity for day and night periods', () => {
+  const dayPeriod = {
+    name: 'Monday',
+    isDaytime: true,
+    startTime: new Date('2026-11-23T05:00:00'),
+    endTime: new Date('2026-11-23T18:00:00')
+  };
+  const dayHours = [
+    { startTime: new Date('2026-11-23T06:00:00'), temperature: 45, windSpeed: 5, gustSpeed: 0, pop: 30, relativeHumidity: 60 },
+    { startTime: new Date('2026-11-23T12:00:00'), temperature: 50, windSpeed: 5, gustSpeed: 0, pop: 80, relativeHumidity: 75 },
+    { startTime: new Date('2026-11-23T15:00:00'), temperature: 52, windSpeed: 5, gustSpeed: 0, pop: 50, relativeHumidity: 90 }
+  ];
+  const dayResult = evaluatePeriod(dayPeriod, dayHours, DEFAULT_SETTINGS, {});
+
+  assert.equal(dayResult.summary.maxPop, 80);
+  assert.equal(dayResult.summary.maxHumidity, 90);
+
+  const nightPeriod = {
+    name: 'Monday Night',
+    isDaytime: false,
+    startTime: new Date('2026-11-23T18:00:00'),
+    endTime: new Date('2026-11-23T20:00:00')
+  };
+  const nightHours = [
+    { startTime: new Date('2026-11-23T18:00:00'), temperature: 50, windSpeed: 5, gustSpeed: 0, pop: 90, relativeHumidity: 85 },
+    { startTime: new Date('2026-11-23T19:00:00'), temperature: 49, windSpeed: 5, gustSpeed: 0, pop: 40, relativeHumidity: null }
+  ];
+  const nightResult = evaluatePeriod(nightPeriod, nightHours, DEFAULT_SETTINGS, {});
+
+  assert.equal(nightResult.summary.maxPop, 90);
+  assert.equal(nightResult.summary.maxHumidity, 85);
+});

@@ -21,6 +21,7 @@ Live App: [https://tjstavenger.github.io/commuter-weather/](https://tjstavenger.
     * **Wind Gust Speed**: Warn at **20 mph**, Drive at **25 mph**
     * **Pre-Sunrise Darkness**: Warn at **75 min**, Drive at **90 min**
     * **Post-Sunset Darkness**: Warn at **75 min**, Drive at **90 min**
+  * Each daily and nightly period summary includes temperature range, wind/gust, maximum precipitation chance, and maximum humidity.
 * **Uncluttered Diagnostic Chips**: When a warning or drive condition is triggered, the UI displays compact, minimal chips (e.g. `[Cold 37°]`, `[Gusts 28mph]`, `[Rain 60%]`) right beside the status badges without walls of text.
 * **Hourly Relative Humidity**: The hourly forecast breakdown displays NWS humidity when available and uses a dash when unavailable.
 * **Astronomical Solar Calculations**: Built-in NOAA solar positioning equations dynamically calculate local sunrise and sunset for your coordinates.
