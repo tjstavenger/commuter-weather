@@ -9,6 +9,7 @@ Live App: [https://tjstavenger.github.io/commuter-weather/](https://tjstavenger.
 ## Features
 
 * **Direct NOAA NWS Web Service Integration**: Communicates directly with the official [api.weather.gov](https://www.weather.gov/documentation/services-web-api) REST API using native CORS support—no third-party CORS proxies required. Hourly wind gusts are sourced from the NWS gridpoint forecast.
+* **Expandable NWS Weather Alerts**: Click an active warning or advisory to view its description, instructions, severity, and timing.
 * **Bicycle Commute Decision Engine**:
   * Evaluates each hour of the forecast and summarizes each day against your commute windows and thresholds.
   * Default Work-Week Commute Windows: **05:30 – 06:30** (Morning) and **15:00 – 16:00** (Afternoon).
@@ -22,8 +23,9 @@ Live App: [https://tjstavenger.github.io/commuter-weather/](https://tjstavenger.
     * **Post-Sunset Darkness**: Warn at **75 min**, Drive at **90 min**
 * **Uncluttered Diagnostic Chips**: When a warning or drive condition is triggered, the UI displays compact, minimal chips (e.g. `[Cold 37°]`, `[Gusts 28mph]`, `[Rain 60%]`) right beside the status badges without walls of text.
 * **Astronomical Solar Calculations**: Built-in NOAA solar positioning equations dynamically calculate local sunrise and sunset for your coordinates.
-* **Dual Location Resolution**:
+* **Flexible Location Search**:
   * Enter any 5-digit US ZIP code (resolved via open geocoding).
+  * Search US city names with autocomplete suggestions from the [Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api), backed by GeoNames. The [NWS API](https://www.weather.gov/documentation/services-web-api) itself accepts coordinates, not city names.
   * Or click **Detect GPS** to use your device's browser Geolocation.
 * **Responsive Mobile & Desktop Design**:
   * Mobile-first cards with smooth accordion drawers.
@@ -52,7 +54,7 @@ commuter-weather/
 │   ├── noaaClient.js           # Unified NOAA NWS REST API client & GeoJSON parser
 │   ├── decisionEngine.js       # Commute evaluation rules, thresholds & reason chips
 │   ├── solar.js                # Astronomical sunrise/sunset calculator
-│   ├── locationService.js      # ZIP geocoding & device browser GPS
+│   ├── locationService.js      # ZIP/city geocoding & device browser GPS
 │   ├── settingsService.js      # User preferences persistence in localStorage
 │   └── components/
 │       ├── Header.js           # Navigation bar, location pill, refresh & settings trigger
@@ -64,6 +66,7 @@ commuter-weather/
 ├── images/                     # Weather condition icons, favicons, ride/caution/drive badges
 └── tests/
     ├── noaaClient.test.js      # Automated tests for NOAA data population and parsing
+    ├── locationService.test.js # Automated tests for ZIP and city geocoding
     ├── decisionEngine.test.js  # Automated tests for commute rules and thresholds
     ├── solar.test.js           # Automated tests for sunrise/sunset accuracy
     └── test_runner.py          # Standalone local test runner (Python 3)
