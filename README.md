@@ -22,6 +22,7 @@ Live App: [https://tjstavenger.github.io/commuter-weather/](https://tjstavenger.
     * **Pre-Sunrise Darkness**: Warn at **75 min**, Drive at **90 min**
     * **Post-Sunset Darkness**: Warn at **75 min**, Drive at **90 min**
 * **Uncluttered Diagnostic Chips**: When a warning or drive condition is triggered, the UI displays compact, minimal chips (e.g. `[Cold 37°]`, `[Gusts 28mph]`, `[Rain 60%]`) right beside the status badges without walls of text.
+* **Hourly Relative Humidity**: The hourly forecast breakdown displays NWS humidity when available and uses a dash when unavailable.
 * **Astronomical Solar Calculations**: Built-in NOAA solar positioning equations dynamically calculate local sunrise and sunset for your coordinates.
 * **Flexible Location Search**:
   * Enter any 5-digit US ZIP code (resolved via open geocoding).
