@@ -13,12 +13,12 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
     ? new Date(period.startTime).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })
     : '';
 
-  // Temp range for subline
-  const tempRange = (summary.minTemp !== null && summary.maxTemp !== null)
+  // Temperature range for the period summary table
+  const tempRange = Number.isFinite(summary.minTemp) && Number.isFinite(summary.maxTemp)
     ? (summary.minTemp !== summary.maxTemp
         ? `${summary.minTemp}–${summary.maxTemp}°F`
         : `${summary.minTemp}°F`)
-    : (period.temperature ? `${period.temperature}°F` : '');
+    : (Number.isFinite(period.temperature) ? `${period.temperature}°F` : '');
 
   // Wind summary
   const windSummary = summary.maxWind > 0 || summary.maxGust > 0
@@ -27,6 +27,8 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
         summary.maxGust > 0 ? `gusts ${summary.maxGust} mph` : ''
       ].filter(Boolean).join(', ')
     : '';
+  const maxPop = Number.isFinite(summary.maxPop) ? `${summary.maxPop}%` : '—';
+  const maxHumidity = Number.isFinite(summary.maxHumidity) ? `${summary.maxHumidity}%` : '—';
 
   return html`
     <div class="period-card ${isSelected ? 'selected' : ''}">
@@ -47,11 +49,23 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
           </div>
           <div class="period-title-wrap">
             <span class="period-name">${period.name}</span>
-            <span class="period-subline">
-              ${formattedDate}
-              ${tempRange ? html` • ${tempRange}` : ''}
-              ${windSummary ? html` • 💨 ${windSummary}` : ''}
-            </span>
+            <span class="period-subline">${formattedDate}</span>
+            <table class="period-summary-table" aria-label="${period.name} weather summary">
+              <tbody>
+                <tr>
+                  <th scope="row">Temp</th>
+                  <td>${tempRange || '—'}</td>
+                  <th scope="row">Wind/gust</th>
+                  <td>${windSummary || '—'}</td>
+                </tr>
+                <tr>
+                  <th scope="row">Max precip</th>
+                  <td>${maxPop}</td>
+                  <th scope="row">Max humidity</th>
+                  <td>${maxHumidity}</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 

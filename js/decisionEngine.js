@@ -252,11 +252,14 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
     }
 
     let ntMinTemp = Infinity, ntMaxTemp = -Infinity, ntMaxWind = 0, ntMaxGust = 0;
+    let ntMaxPop = -Infinity, ntMaxHumidity = -Infinity;
     for (const h of evaluatedHours) {
       if (h.temperature < ntMinTemp) ntMinTemp = h.temperature;
       if (h.temperature > ntMaxTemp) ntMaxTemp = h.temperature;
       if (h.windSpeed > ntMaxWind) ntMaxWind = h.windSpeed;
       if ((h.gustSpeed || 0) > ntMaxGust) ntMaxGust = h.gustSpeed || 0;
+      if (Number.isFinite(h.pop) && h.pop > ntMaxPop) ntMaxPop = h.pop;
+      if (Number.isFinite(h.relativeHumidity) && h.relativeHumidity > ntMaxHumidity) ntMaxHumidity = h.relativeHumidity;
     }
     return {
       ...period,
@@ -267,7 +270,9 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
         minTemp: isFinite(ntMinTemp) ? ntMinTemp : null,
         maxTemp: isFinite(ntMaxTemp) ? ntMaxTemp : null,
         maxWind: ntMaxWind,
-        maxGust: ntMaxGust
+        maxGust: ntMaxGust,
+        maxPop: isFinite(ntMaxPop) ? ntMaxPop : null,
+        maxHumidity: isFinite(ntMaxHumidity) ? ntMaxHumidity : null
       }
     };
   }
@@ -334,11 +339,15 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
   let periodMaxTemp = -Infinity;
   let periodMaxWind = 0;
   let periodMaxGust = 0;
+  let periodMaxPop = -Infinity;
+  let periodMaxHumidity = -Infinity;
   for (const h of evaluatedHours) {
     if (h.temperature < periodMinTemp) periodMinTemp = h.temperature;
     if (h.temperature > periodMaxTemp) periodMaxTemp = h.temperature;
     if (h.windSpeed > periodMaxWind) periodMaxWind = h.windSpeed;
     if ((h.gustSpeed || 0) > periodMaxGust) periodMaxGust = h.gustSpeed || 0;
+    if (Number.isFinite(h.pop) && h.pop > periodMaxPop) periodMaxPop = h.pop;
+    if (Number.isFinite(h.relativeHumidity) && h.relativeHumidity > periodMaxHumidity) periodMaxHumidity = h.relativeHumidity;
   }
 
   return {
@@ -354,7 +363,9 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
       minTemp: isFinite(periodMinTemp) ? periodMinTemp : null,
       maxTemp: isFinite(periodMaxTemp) ? periodMaxTemp : null,
       maxWind: periodMaxWind,
-      maxGust: periodMaxGust
+      maxGust: periodMaxGust,
+      maxPop: isFinite(periodMaxPop) ? periodMaxPop : null,
+      maxHumidity: isFinite(periodMaxHumidity) ? periodMaxHumidity : null
     }
   };
 }

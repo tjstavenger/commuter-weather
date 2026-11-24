@@ -441,6 +441,35 @@ body {
   color: var(--text-secondary);
 }
 
+.period-summary-table {
+  width: 100%;
+  margin-top: 0.2rem;
+  border-collapse: collapse;
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+.period-summary-table th,
+.period-summary-table td {
+  padding: 0.1rem 0.35rem 0.1rem 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.period-summary-table th {
+  color: var(--text-muted);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.period-summary-table td {
+  color: var(--text-secondary);
+}
+
+.period-summary-table th:nth-child(3) {
+  padding-left: 0.5rem;
+}
+
 .period-header-right {
   display: flex;
   align-items: center;
