@@ -200,7 +200,7 @@ export function OptionsModal({ isOpen, options, onClose, onSave }) {
                   class="input-text"
                   value=${cityQuery}
                   onInput=${handleCityQueryChange}
-                  placeholder="e.g. Ilwaco, WA"
+                  placeholder="e.g. Richland, WA"
                   autoComplete="off"
                   aria-describedby="city-search-attribution"
                 />
