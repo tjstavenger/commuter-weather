@@ -1,9 +1,10 @@
 /**
  * Location and Geocoding Service
- * Resolves US ZIP codes to coordinates and provides browser Geolocation.
+ * Resolves US ZIP codes, city names, and browser Geolocation.
  */
 
 const ZIP_API_BASE = 'https://api.zippopotam.us/us';
+const CITY_SEARCH_API = 'https://geocoding-api.open-meteo.com/v1/search';
 
 /**
  * Resolves a 5-digit US ZIP code to latitude, longitude, city, and state.
@@ -41,6 +42,57 @@ export async function lookupZip(zipCode, fetchFn = (typeof window !== 'undefined
     city: place['place name'] || '',
     state: place['state abbreviation'] || ''
   };
+}
+
+/**
+ * Searches US cities using Open-Meteo's GeoNames-backed geocoding API.
+ * @param {string} query City name, optionally followed by a state
+ * @param {Function} fetchFn Optional fetch dependency injection for testing
+ * @returns {Promise<Array<{ id: number, zip: string, lat: number, lon: number, city: string, state: string }>>}
+ */
+export async function searchCities(query, fetchFn = (typeof window !== 'undefined' ? window.fetch.bind(window) : globalThis.fetch)) {
+  const cleanQuery = String(query).trim();
+  if (cleanQuery.length < 2) return [];
+
+  const url = new URL(CITY_SEARCH_API);
+  url.searchParams.set('name', cleanQuery);
+  url.searchParams.set('count', '8');
+  url.searchParams.set('language', 'en');
+  url.searchParams.set('format', 'json');
+  url.searchParams.set('countryCode', 'US');
+
+  const response = await fetchFn(url.toString());
+  if (!response.ok) {
+    throw new Error(`City search failed (HTTP ${response.status}).`);
+  }
+
+  const data = await response.json();
+  if (data.error) {
+    throw new Error(data.reason || 'City search failed.');
+  }
+  if (data.results === undefined) return [];
+  if (!Array.isArray(data.results)) {
+    throw new Error('City search returned an invalid response.');
+  }
+
+  return data.results
+    .filter(place => place.country_code === 'US')
+    .map(place => {
+      const lat = Number(place.latitude);
+      const lon = Number(place.longitude);
+      if (!Number.isFinite(place.id) || !place.name || !Number.isFinite(lat) || !Number.isFinite(lon)) {
+        throw new Error('City search returned an invalid location.');
+      }
+
+      return {
+        id: place.id,
+        zip: '',
+        lat,
+        lon,
+        city: place.name,
+        state: place.admin1 || ''
+      };
+    });
 }
 
 /**

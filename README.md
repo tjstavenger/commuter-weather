@@ -22,8 +22,9 @@ Live App: [https://tjstavenger.github.io/commuter-weather/](https://tjstavenger.
     * **Post-Sunset Darkness**: Warn at **75 min**, Drive at **90 min**
 * **Uncluttered Diagnostic Chips**: When a warning or drive condition is triggered, the UI displays compact, minimal chips (e.g. `[Cold 37°]`, `[Gusts 28mph]`, `[Rain 60%]`) right beside the status badges without walls of text.
 * **Astronomical Solar Calculations**: Built-in NOAA solar positioning equations dynamically calculate local sunrise and sunset for your coordinates.
-* **Dual Location Resolution**:
+* **Flexible Location Search**:
   * Enter any 5-digit US ZIP code (resolved via open geocoding).
+  * Search US city names with autocomplete suggestions from the [Open-Meteo Geocoding API](https://open-meteo.com/en/docs/geocoding-api), backed by GeoNames. The [NWS API](https://www.weather.gov/documentation/services-web-api) itself accepts coordinates, not city names.
   * Or click **Detect GPS** to use your device's browser Geolocation.
 * **Responsive Mobile & Desktop Design**:
   * Mobile-first cards with smooth accordion drawers.
@@ -52,7 +53,7 @@ commuter-weather/
 │   ├── noaaClient.js           # Unified NOAA NWS REST API client & GeoJSON parser
 │   ├── decisionEngine.js       # Commute evaluation rules, thresholds & reason chips
 │   ├── solar.js                # Astronomical sunrise/sunset calculator
-│   ├── locationService.js      # ZIP geocoding & device browser GPS
+│   ├── locationService.js      # ZIP/city geocoding & device browser GPS
 │   ├── settingsService.js      # User preferences persistence in localStorage
 │   └── components/
 │       ├── Header.js           # Navigation bar, location pill, refresh & settings trigger
@@ -64,6 +65,7 @@ commuter-weather/
 ├── images/                     # Weather condition icons, favicons, ride/caution/drive badges
 └── tests/
     ├── noaaClient.test.js      # Automated tests for NOAA data population and parsing
+    ├── locationService.test.js # Automated tests for ZIP and city geocoding
     ├── decisionEngine.test.js  # Automated tests for commute rules and thresholds
     ├── solar.test.js           # Automated tests for sunrise/sunset accuracy
     └── test_runner.py          # Standalone local test runner (Python 3)
