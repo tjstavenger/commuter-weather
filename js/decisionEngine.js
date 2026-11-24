@@ -188,6 +188,25 @@ export function evaluateHour(hour, options, sun) {
   };
 }
 
+function summarizeReasons(reasons) {
+  const summarized = new Map();
+
+  for (const reason of reasons) {
+    const match = /^(Cold|Heat|Rain|Wind|Gusts) (-?\d+(?:\.\d+)?)(°|%|mph)$/.exec(reason);
+    const key = match ? match[1] : reason;
+    const value = match ? Number(match[2]) : null;
+    const previous = summarized.get(key);
+    const isMoreSevere = previous && value !== null
+      && (key === 'Cold' ? value < previous.value : value > previous.value);
+
+    if (!previous || isMoreSevere) {
+      summarized.set(key, { reason, value });
+    }
+  }
+
+  return [...summarized.values()].map(item => item.reason);
+}
+
 /**
  * Checks if a given Date is a standard weekday (Monday to Friday).
  */
@@ -242,7 +261,7 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
     return {
       ...period,
       status: worstStatus,
-      reasons: [...new Set(allReasons)].slice(0, 3),
+      reasons: summarizeReasons(allReasons).slice(0, 3),
       hours: evaluatedHours,
       summary: {
         minTemp: isFinite(ntMinTemp) ? ntMinTemp : null,
@@ -325,7 +344,7 @@ export function evaluatePeriod(period, hourlyPeriods, options, sun) {
   return {
     ...period,
     status: periodStatus,
-    reasons: [...new Set(periodReasons)].slice(0, 3), // Keep top 3 concise reason chips to prevent UI clutter
+    reasons: summarizeReasons(periodReasons).slice(0, 3), // Keep top 3 concise reason chips to prevent UI clutter
     hours: evaluatedHours,
     commuteHours: {
       morning: morningHours,
