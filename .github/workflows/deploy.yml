@@ -59,6 +59,9 @@ jobs:
           name: github-pages-${{ github.run_attempt }}
           path: '.'
 
+      - name: Allow Pages artifact registration
+        run: sleep 15
+
       - name: Wait for Pages artifact availability
         uses: actions/github-script@v7
         env:
