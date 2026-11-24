@@ -21,6 +21,7 @@ export function HourlyView({ hours, options }) {
             <th>Temp</th>
             <th>Feels</th>
             <th>Rain</th>
+            <th>Humidity</th>
             <th>Wind</th>
             <th>Gust</th>
             <th>Reasons</th>
@@ -35,6 +36,9 @@ export function HourlyView({ hours, options }) {
             const timeStr = h.startTime.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
             const status = h.evaluation?.status || 'ride';
             const reasons = h.evaluation?.reasons || [];
+            const humidity = h.relativeHumidity !== null && h.relativeHumidity !== undefined
+              ? `${h.relativeHumidity}%`
+              : '—';
 
             return html`
               <tr class=${isCommute ? 'highlight-commute' : ''}>
@@ -47,6 +51,7 @@ export function HourlyView({ hours, options }) {
                 <td><strong>${h.temperature}°</strong></td>
                 <td>${h.evaluation?.apparentTemp || h.temperature}°</td>
                 <td>${h.pop}%</td>
+                <td>${humidity}</td>
                 <td>${h.windDirection} ${h.windSpeed}</td>
                 <td>${h.gustSpeed > 0 ? html`<span class="gust-val">${h.gustSpeed}</span>` : '—'}</td>
                 <td>
