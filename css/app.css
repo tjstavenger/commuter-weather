@@ -749,6 +749,43 @@ body {
   border-color: var(--primary);
 }
 
+.location-attribution,
+.location-search-status {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.city-search-results {
+  max-height: 12rem;
+  overflow-y: auto;
+  list-style: none;
+  margin: 0.25rem 0 0;
+  padding: 0.25rem;
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.city-search-option {
+  display: block;
+  width: 100%;
+  padding: 0.55rem 0.65rem;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.city-search-option:hover,
+.city-search-option:focus-visible {
+  background-color: var(--bg-primary);
+  outline: none;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
