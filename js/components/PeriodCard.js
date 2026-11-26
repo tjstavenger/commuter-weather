@@ -117,7 +117,6 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
                   <td>${tempRange || '—'}</td>
                   <th scope="row" aria-label="Wind and gust" title="Wind and gust">
                     <img src="./images/wind.svg" alt="" aria-hidden="true" class="summary-metric-icon" />
-                    <img src="./images/gust.svg" alt="" aria-hidden="true" class="summary-metric-icon" />
                   </th>
                   <td>${windSummary || '—'}</td>
                 </tr>
