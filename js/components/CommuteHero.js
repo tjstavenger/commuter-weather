@@ -45,19 +45,19 @@ export function CommuteHero({ currentConditions, timeZone }) {
         <div class="hero-summary-metrics">
           <div class="metric-item" title="Current Temperature">
             <img src="./images/temp.svg" alt="Temperature" class="summary-metric-icon" />
-            <span><strong>${metrics.temperature}°F</strong></span>
+            <span>${metrics.temperature}°F</span>
           </div>
           <div class="metric-item" title="Apparent Temperature">
             <img src="./images/windChill.svg" alt="Feels like temperature" class="summary-metric-icon" />
-            <span><strong>${metrics.apparentTemp}°F</strong></span>
+            <span>${metrics.apparentTemp}°F</span>
           </div>
           <div class="metric-item" title="Chance of Precipitation">
             <img src="./images/precip.svg" alt="Precipitation" class="summary-metric-icon" />
             <span>
               ${metrics.precipitationLastHour !== null
-                ? html`<strong>${metrics.precipitationLastHour} in</strong> past hour · `
+                ? html`${metrics.precipitationLastHour} in past hour · `
                 : ''}
-              <strong>${metrics.pop}%</strong>
+              ${metrics.pop}%
             </span>
           </div>
           <div class="metric-item" title="Sustained Wind / Gust">
@@ -65,20 +65,20 @@ export function CommuteHero({ currentConditions, timeZone }) {
               <img src="./images/wind.svg" alt="Wind" class="summary-metric-icon" />
             </span>
             <span>
-              <strong>${metrics.wind}</strong> mph ${currentConditions.windDirection}
-              ${metrics.gust > 0 ? html` · <strong>${metrics.gust}</strong> mph` : ''}
+              ${metrics.wind} mph ${currentConditions.windDirection}
+              ${metrics.gust > 0 ? html` · ${metrics.gust} mph` : ''}
             </span>
           </div>
           ${metrics.relativeHumidity !== null ? html`
             <div class="metric-item" title="Relative Humidity">
               <img src="./images/humidity.svg" alt="Humidity" class="summary-metric-icon" />
-              <span><strong>${metrics.relativeHumidity}%</strong></span>
+              <span>${metrics.relativeHumidity}%</span>
             </div>
           ` : null}
           ${metrics.visibility !== null ? html`
             <div class="metric-item" title="Visibility">
               <img src="./images/visibility.svg" alt="Visibility" class="summary-metric-icon" />
-              <span><strong>${metrics.visibility}</strong> mi</span>
+              <span>${metrics.visibility} mi</span>
             </div>
           ` : null}
         </div>
