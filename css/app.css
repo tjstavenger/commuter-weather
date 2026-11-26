@@ -442,32 +442,47 @@ body {
   color: var(--text-secondary);
 }
 
-/* Title row: name+date on the left, sun time on the right */
-.period-summary-title-row td {
-  padding-bottom: 0.15rem;
+.period-summary-table .period-summary-name-row td {
+  padding-bottom: 0;
   vertical-align: middle;
 }
 
-.period-summary-name-cell .period-name,
-.period-summary-name-cell .period-subline {
+.period-summary-name-cell .period-name {
   display: block;
 }
 
-.period-summary-sun-cell {
-  text-align: right;
+.period-summary-table .period-summary-date-row td {
+  padding-top: 0;
+  padding-bottom: 0.2rem;
+  vertical-align: middle;
+}
+
+.period-summary-subline-cell .period-subline {
+  display: block;
+}
+
+.period-summary-table td.period-summary-sun-icon-cell {
+  padding-left: 0.5rem;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.period-summary-table td.period-summary-sun-time-cell {
+  text-align: left;
   white-space: nowrap;
   color: var(--text-secondary);
   font-size: 0.7rem;
-  padding-left: 0.25rem;
+  padding-left: 0;
+  vertical-align: middle;
 }
 
 .period-sun-time {
   vertical-align: middle;
-  margin-left: 0.2rem;
 }
 
 .period-summary-table {
-  width: 100%;
+  width: max-content;
+  max-width: 100%;
   margin-top: 0;
   border-collapse: collapse;
   font-size: 0.7rem;
