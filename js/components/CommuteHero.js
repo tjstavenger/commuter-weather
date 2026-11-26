@@ -78,7 +78,7 @@ export function CommuteHero({ currentConditions, timeZone }) {
           ${metrics.visibility !== null ? html`
             <div class="metric-item" title="Visibility">
               <img src="./images/visibility.svg" alt="Visibility" class="summary-metric-icon" />
-              <span><strong>${metrics.visibility}</strong> mi visibility</span>
+              <span><strong>${metrics.visibility}</strong> mi</span>
             </div>
           ` : null}
         </div>
