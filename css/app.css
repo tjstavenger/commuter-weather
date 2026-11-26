@@ -596,7 +596,7 @@ body {
 
 .gust-val {
   font-weight: 700;
-  color: var(--caution-color);
+  color: var(--text-secondary);
 }
 
 .hourly-ok {
