@@ -442,14 +442,23 @@ body {
   color: var(--text-secondary);
 }
 
-/* Title row: name+date on the left, sun time on the right */
-.period-summary-title-row td {
-  padding-bottom: 0.15rem;
+/* Title rows: name on its own row, date + sun time share the row below */
+.period-summary-name-row td {
+  padding-bottom: 0;
   vertical-align: middle;
 }
 
-.period-summary-name-cell .period-name,
-.period-summary-name-cell .period-subline {
+.period-summary-name-cell .period-name {
+  display: block;
+}
+
+.period-summary-date-row td {
+  padding-top: 0;
+  padding-bottom: 0.2rem;
+  vertical-align: middle;
+}
+
+.period-summary-subline-cell .period-subline {
   display: block;
 }
 
@@ -459,6 +468,7 @@ body {
   color: var(--text-secondary);
   font-size: 0.7rem;
   padding-left: 0.25rem;
+  vertical-align: middle;
 }
 
 .period-sun-time {

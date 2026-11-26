@@ -92,9 +92,13 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
           <div class="period-title-wrap">
             <table class="period-summary-table" aria-label="${period.name} weather summary">
               <tbody>
-                <tr class="period-summary-title-row">
-                  <td colspan="2" class="period-summary-name-cell">
+                <tr class="period-summary-name-row">
+                  <td colspan="4" class="period-summary-name-cell">
                     <span class="period-name">${period.name}</span>
+                  </td>
+                </tr>
+                <tr class="period-summary-date-row">
+                  <td colspan="2" class="period-summary-subline-cell">
                     <span class="period-subline">${formattedDate}</span>
                   </td>
                   ${(sunriseTime || sunsetTime) ? html`
