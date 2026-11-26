@@ -442,7 +442,7 @@ body {
   color: var(--text-secondary);
 }
 
-.period-summary-name-row td {
+.period-summary-table .period-summary-name-row td {
   padding-bottom: 0;
   vertical-align: middle;
 }
@@ -451,7 +451,7 @@ body {
   display: block;
 }
 
-.period-summary-date-row td {
+.period-summary-table .period-summary-date-row td {
   padding-top: 0;
   padding-bottom: 0.2rem;
   vertical-align: middle;
@@ -461,7 +461,13 @@ body {
   display: block;
 }
 
-.period-summary-sun-cell {
+.period-summary-table td.period-summary-sun-icon-cell {
+  padding-left: 0.5rem;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+
+.period-summary-table td.period-summary-sun-time-cell {
   text-align: left;
   white-space: nowrap;
   color: var(--text-secondary);
@@ -472,7 +478,6 @@ body {
 
 .period-sun-time {
   vertical-align: middle;
-  margin-left: 0.2rem;
 }
 
 .period-summary-table {

@@ -98,15 +98,17 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
                   </td>
                 </tr>
                 <tr class="period-summary-date-row">
-                  <td colspan="3" class="period-summary-subline-cell">
+                  <td colspan="2" class="period-summary-subline-cell">
                     <span class="period-subline">${formattedDate}</span>
                   </td>
                   ${(sunriseTime || sunsetTime) ? html`
-                  <td class="period-summary-sun-cell">
+                  <td class="period-summary-sun-icon-cell">
                     ${sunriseTime ? html`<${SunriseIcon} />` : html`<${SunsetIcon} />`}
+                  </td>
+                  <td class="period-summary-sun-time-cell">
                     <span class="period-sun-time">${sunriseTime || sunsetTime}</span>
                   </td>
-                  ` : html`<td></td>`}
+                  ` : html`<td></td><td></td>`}
                 </tr>
                 <tr>
                   <th scope="row" aria-label="Temperature" title="Temperature">
