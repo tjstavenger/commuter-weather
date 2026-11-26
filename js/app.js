@@ -61,7 +61,8 @@ export function App() {
 
     return daily.map(period => {
       const sun = getSunriseSunset(period.startTime, lat, lon);
-      return evaluatePeriod(period, hourly, settings, sun);
+      const evaluated = evaluatePeriod(period, hourly, settings, sun);
+      return { ...evaluated, sun };
     });
   }, [forecastData, settings]);
 

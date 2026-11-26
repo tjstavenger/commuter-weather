@@ -478,6 +478,11 @@ body {
   vertical-align: middle;
 }
 
+.summary-metric-icon.sun-icon {
+  color: var(--text-secondary);
+  vertical-align: middle;
+}
+
 .summary-metric-icon + .summary-metric-icon {
   margin-left: 0.1rem;
 }
@@ -490,7 +495,7 @@ body {
 }
 
 @media (prefers-color-scheme: dark) {
-  .summary-metric-icon {
+  .summary-metric-icon:not(.sun-icon) {
     filter: invert(1);
   }
 }

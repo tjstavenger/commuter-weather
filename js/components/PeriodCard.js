@@ -4,10 +4,43 @@ import { HourlyView } from './HourlyView.js';
 
 const html = htm.bind(h);
 
+const SunriseIcon = () => html`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="summary-metric-icon sun-icon" aria-hidden="true">
+    <path d="M12 2v2"/>
+    <path d="m4.93 4.93 1.41 1.41"/>
+    <path d="M20 12h2"/>
+    <path d="M2 12h2"/>
+    <path d="m19.07 4.93-1.41 1.41"/>
+    <path d="M12 7a5 5 0 0 1 5 5"/>
+    <path d="M12 7a5 5 0 0 0-5 5"/>
+    <path d="M3 20h18"/>
+    <path d="m5 16 2.5-2.5"/>
+    <path d="m19 16-2.5-2.5"/>
+    <path d="M12 14v6"/>
+  </svg>
+`;
+
+const SunsetIcon = () => html`
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" class="summary-metric-icon sun-icon" aria-hidden="true">
+    <path d="M12 10V2"/>
+    <path d="m4.93 10.93 1.41-1.41"/>
+    <path d="M2 18h2"/>
+    <path d="M20 18h2"/>
+    <path d="m19.07 10.93-1.41-1.41"/>
+    <path d="M12 7a5 5 0 0 1 5 5"/>
+    <path d="M12 7a5 5 0 0 0-5 5"/>
+    <path d="M3 18h18"/>
+    <path d="m5 14 2.5 2.5"/>
+    <path d="m19 14-2.5 2.5"/>
+    <path d="M12 18v2"/>
+  </svg>
+`;
+
 export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, onSelect }) {
   const status = period.status || 'ride';
   const reasons = period.reasons || [];
   const summary = period.summary || {};
+  const sun = period.sun || null;
 
   const formattedDate = period.startTime
     ? new Date(period.startTime).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' })
@@ -31,6 +64,13 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
     : '';
   const maxPop = Number.isFinite(summary.maxPop) ? `${summary.maxPop}%` : '—';
   const maxHumidity = Number.isFinite(summary.maxHumidity) ? `${summary.maxHumidity}%` : '—';
+
+  const formatTime = (date) =>
+    date ? date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }) : null;
+
+  // Show sunrise on daytime cards, sunset on nightly cards
+  const sunriseTime = period.isDaytime && sun?.sunrise ? formatTime(sun.sunrise) : null;
+  const sunsetTime = !period.isDaytime && sun?.sunset ? formatTime(sun.sunset) : null;
 
   return html`
     <div class="period-card ${isSelected ? 'selected' : ''}">
@@ -75,6 +115,14 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
                   </th>
                   <td>${maxHumidity}</td>
                 </tr>
+                ${(sunriseTime || sunsetTime) ? html`
+                <tr>
+                  <th scope="row" aria-label="${sunriseTime ? 'Sunrise' : 'Sunset'}" title="${sunriseTime ? 'Sunrise' : 'Sunset'}">
+                    ${sunriseTime ? html`<${SunriseIcon} />` : html`<${SunsetIcon} />`}
+                  </th>
+                  <td colspan="3">${sunriseTime || sunsetTime}</td>
+                </tr>
+                ` : null}
               </tbody>
             </table>
           </div>
