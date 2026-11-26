@@ -48,7 +48,7 @@ export function HourlyView({ hours, options }) {
                   ${isMorning ? html`<span class="hourly-commute-tag">AM</span>` : ''}
                   ${isAfternoon ? html`<span class="hourly-commute-tag">PM</span>` : ''}
                 </td>
-                <td><strong>${h.temperature}°</strong></td>
+                <td>${h.temperature}°</td>
                 <td>${h.evaluation?.apparentTemp || h.temperature}°</td>
                 <td>${h.pop}%</td>
                 <td>${humidity}</td>
