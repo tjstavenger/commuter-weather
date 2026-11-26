@@ -90,10 +90,20 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
             `}
           </div>
           <div class="period-title-wrap">
-            <span class="period-name">${period.name}</span>
-            <span class="period-subline">${formattedDate}</span>
             <table class="period-summary-table" aria-label="${period.name} weather summary">
               <tbody>
+                <tr class="period-summary-title-row">
+                  <td colspan="2" class="period-summary-name-cell">
+                    <span class="period-name">${period.name}</span>
+                    <span class="period-subline">${formattedDate}</span>
+                  </td>
+                  ${(sunriseTime || sunsetTime) ? html`
+                  <td colspan="2" class="period-summary-sun-cell">
+                    ${sunriseTime ? html`<${SunriseIcon} />` : html`<${SunsetIcon} />`}
+                    <span class="period-sun-time">${sunriseTime || sunsetTime}</span>
+                  </td>
+                  ` : html`<td colspan="2"></td>`}
+                </tr>
                 <tr>
                   <th scope="row" aria-label="Temperature" title="Temperature">
                     <img src="./images/temp.svg" alt="" aria-hidden="true" class="summary-metric-icon" />
@@ -115,14 +125,6 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
                   </th>
                   <td>${maxHumidity}</td>
                 </tr>
-                ${(sunriseTime || sunsetTime) ? html`
-                <tr>
-                  <th scope="row" aria-label="${sunriseTime ? 'Sunrise' : 'Sunset'}" title="${sunriseTime ? 'Sunrise' : 'Sunset'}">
-                    ${sunriseTime ? html`<${SunriseIcon} />` : html`<${SunsetIcon} />`}
-                  </th>
-                  <td colspan="3">${sunriseTime || sunsetTime}</td>
-                </tr>
-                ` : null}
               </tbody>
             </table>
           </div>
