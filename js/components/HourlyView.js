@@ -44,7 +44,7 @@ export function HourlyView({ hours, options }) {
               <tr class=${isCommute ? 'highlight-commute' : ''}>
                 <td>
                   <span class="hourly-dot ${status}"></span>
-                  <strong>${timeStr}</strong>
+                  ${timeStr}
                   ${isMorning ? html`<span class="hourly-commute-tag">AM</span>` : ''}
                   ${isAfternoon ? html`<span class="hourly-commute-tag">PM</span>` : ''}
                 </td>
