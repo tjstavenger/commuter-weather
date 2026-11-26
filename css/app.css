@@ -442,33 +442,32 @@ body {
   color: var(--text-secondary);
 }
 
-.period-summary-heading {
-  min-width: 0;
-  padding-bottom: 0.2rem;
+.period-summary-name-row td {
+  padding-bottom: 0;
+  vertical-align: middle;
 }
 
-.period-summary-heading .period-name {
+.period-summary-name-cell .period-name {
   display: block;
 }
 
-.period-summary-date-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.5rem;
+.period-summary-date-row td {
+  padding-top: 0;
+  padding-bottom: 0.2rem;
+  vertical-align: middle;
 }
 
-.period-summary-date-row .period-subline {
+.period-summary-subline-cell .period-subline {
   display: block;
 }
 
 .period-summary-sun-cell {
-  display: inline-flex;
-  align-items: center;
+  text-align: left;
   white-space: nowrap;
   color: var(--text-secondary);
   font-size: 0.7rem;
-  flex-shrink: 0;
+  padding-left: 0;
+  vertical-align: middle;
 }
 
 .period-sun-time {

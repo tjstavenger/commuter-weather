@@ -90,20 +90,24 @@ export function PeriodCard({ period, options, isExpanded, onToggle, isSelected, 
             `}
           </div>
           <div class="period-title-wrap">
-            <div class="period-summary-heading">
-              <span class="period-name">${period.name}</span>
-              <div class="period-summary-date-row">
-                <span class="period-subline">${formattedDate}</span>
-                ${(sunriseTime || sunsetTime) ? html`
-                <span class="period-summary-sun-cell">
-                  ${sunriseTime ? html`<${SunriseIcon} />` : html`<${SunsetIcon} />`}
-                  <span class="period-sun-time">${sunriseTime || sunsetTime}</span>
-                </span>
-                ` : null}
-              </div>
-            </div>
             <table class="period-summary-table" aria-label="${period.name} weather summary">
               <tbody>
+                <tr class="period-summary-name-row">
+                  <td colspan="4" class="period-summary-name-cell">
+                    <span class="period-name">${period.name}</span>
+                  </td>
+                </tr>
+                <tr class="period-summary-date-row">
+                  <td colspan="3" class="period-summary-subline-cell">
+                    <span class="period-subline">${formattedDate}</span>
+                  </td>
+                  ${(sunriseTime || sunsetTime) ? html`
+                  <td class="period-summary-sun-cell">
+                    ${sunriseTime ? html`<${SunriseIcon} />` : html`<${SunsetIcon} />`}
+                    <span class="period-sun-time">${sunriseTime || sunsetTime}</span>
+                  </td>
+                  ` : html`<td></td>`}
+                </tr>
                 <tr>
                   <th scope="row" aria-label="Temperature" title="Temperature">
                     <img src="./images/temp.svg" alt="" aria-hidden="true" class="summary-metric-icon" />
