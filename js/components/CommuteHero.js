@@ -63,9 +63,6 @@ export function CommuteHero({ currentConditions, timeZone }) {
           <div class="metric-item" title="Sustained Wind / Gust">
             <span class="summary-metric-icon-group">
               <img src="./images/wind.svg" alt="Wind" class="summary-metric-icon" />
-              ${metrics.gust > 0
-                ? html`<img src="./images/gust.svg" alt="Gust" class="summary-metric-icon" />`
-                : null}
             </span>
             <span>
               <strong>${metrics.wind}</strong> mph ${currentConditions.windDirection}
@@ -80,7 +77,7 @@ export function CommuteHero({ currentConditions, timeZone }) {
           ` : null}
           ${metrics.visibility !== null ? html`
             <div class="metric-item" title="Visibility">
-              <img src="./images/visibility.svg" alt="Visibility" />
+              <img src="./images/visibility.svg" alt="Visibility" class="summary-metric-icon" />
               <span><strong>${metrics.visibility}</strong> mi visibility</span>
             </div>
           ` : null}
